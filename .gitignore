@@ -1,5 +1,6 @@
 *-debug.log
 *-error.log
+**/.DS_Store
 /.nyc_output
 /dist
 /tmp
