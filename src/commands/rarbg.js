@@ -84,7 +84,7 @@ class RarbgCommand extends Command {
       })
     }
     cli.action.stop()
-    this.log(chalk.green('All files sent to Put'))
+    this.log(chalk.green('All files sent to Put.'))
   }
 }
 
