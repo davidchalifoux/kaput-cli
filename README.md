@@ -48,6 +48,7 @@ USAGE
 * [`kaput login`](#kaput-login)
 * [`kaput logout`](#kaput-logout)
 * [`kaput rarbg`](#kaput-rarbg)
+* [`kaput transfers`](#kaput-transfers)
 * [`kaput transfers:add`](#kaput-transfersadd)
 * [`kaput whoami`](#kaput-whoami)
 
@@ -139,6 +140,25 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\rarbg.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\rarbg.js)_
+
+## `kaput transfers`
+
+List transfers
+
+```
+USAGE
+  $ kaput transfers
+
+OPTIONS
+  --filter=filter  filter property by partial string matching, ex: name=foo
+  --sort=sort
+
+DESCRIPTION
+  ...
+  Lists current transfers on the account.
+```
+
+_See code: [src\commands\transfers\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\index.js)_
 
 ## `kaput transfers:add`
 
