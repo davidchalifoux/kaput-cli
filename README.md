@@ -50,6 +50,7 @@ USAGE
 * [`kaput rarbg`](#kaput-rarbg)
 * [`kaput transfers`](#kaput-transfers)
 * [`kaput transfers:add`](#kaput-transfersadd)
+* [`kaput transfers:cancel`](#kaput-transferscancel)
 * [`kaput transfers:clear`](#kaput-transfersclear)
 * [`kaput transfers:retry`](#kaput-transfersretry)
 * [`kaput whoami`](#kaput-whoami)
@@ -180,6 +181,24 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\add.js)_
+
+## `kaput transfers:cancel`
+
+Cancel an ongoing transfer.
+
+```
+USAGE
+  $ kaput transfers:cancel
+
+OPTIONS
+  -i, --transferID=transferID  ID of transfer to cancel.
+
+DESCRIPTION
+  ...
+  This command allows you to cancel an ongoing transfer.
+```
+
+_See code: [src\commands\transfers\cancel.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\cancel.js)_
 
 ## `kaput transfers:clear`
 
