@@ -37,7 +37,7 @@ class CancelCommand extends Command {
 
 CancelCommand.description = `Cancel an ongoing transfer.
 ...
-This command allows you to cancel an ongoing transfer.
+If transfer is in seeding state, stops seeding. Else, removes transfer entry. Does not remove their files.
 `
 
 CancelCommand.flags = {
