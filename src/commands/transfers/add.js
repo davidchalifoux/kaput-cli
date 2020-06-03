@@ -20,7 +20,7 @@ class AddCommand extends Command {
 
     // Confirm URL
     while (!url) {
-      url = await cli.prompt('URL to download')
+      url = await cli.prompt('File URL')
     }
 
     // Send to put
