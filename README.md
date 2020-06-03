@@ -45,6 +45,7 @@ USAGE
 <!-- commands -->
 * [`kaput download`](#kaput-download)
 * [`kaput files`](#kaput-files)
+* [`kaput files:search`](#kaput-filessearch)
 * [`kaput help [COMMAND]`](#kaput-help-command)
 * [`kaput login`](#kaput-login)
 * [`kaput logout`](#kaput-logout)
@@ -95,6 +96,24 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\files\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\index.js)_
+
+## `kaput files:search`
+
+Describe the command here
+
+```
+USAGE
+  $ kaput files:search
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src\commands\files\search.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\search.js)_
 
 ## `kaput help [COMMAND]`
 
