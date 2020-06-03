@@ -302,7 +302,7 @@ _See code: [src\commands\transfers\retry.js](https://github.com/davidchalifoux/k
 
 ## `kaput whoami`
 
-What username you are logged into.
+Find the username you are logged in as.
 
 ```
 USAGE
