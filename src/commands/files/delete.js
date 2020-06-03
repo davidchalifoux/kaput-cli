@@ -10,7 +10,7 @@ const chalk = require('chalk')
 class DeleteCommand extends Command {
   async run() {
     const {argv} = this.parse(DeleteCommand)
-    let fileID = argv[0] || null
+    const fileID = argv[0] || null
 
     // Check for auth
     await requireAuth()
@@ -20,7 +20,6 @@ class DeleteCommand extends Command {
     await put.Files.Delete([fileID])
     .then(() => {
       cli.action.stop()
-      this.log(chalk.green('File deleted.'))
     })
     .catch(error => {
       this.log(chalk.red('Error:', error.data.error_message))
