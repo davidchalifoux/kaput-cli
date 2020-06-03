@@ -26,7 +26,7 @@ class LinkCommand extends Command {
   }
 }
 
-LinkCommand.description = `Generates download link.
+LinkCommand.description = `Generate a download link
 ...
 This command generates a fresh download link.
 Note: This link will only work on the device it was generated on.
@@ -36,7 +36,7 @@ LinkCommand.args = [
   {
     name: 'fileID',
     required: true,
-    description: 'ID of the file to generate a link for.',
+    description: '(ID of the file to generate a link for)',
   },
 ]
 

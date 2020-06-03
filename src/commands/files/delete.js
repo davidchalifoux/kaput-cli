@@ -37,7 +37,7 @@ DeleteCommand.args = [
   {
     name: 'fileID',
     required: true,
-    description: 'ID of the file to delete',
+    description: '(ID of the file to delete)',
   },
 ]
 

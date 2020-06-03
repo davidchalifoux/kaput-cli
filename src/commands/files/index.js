@@ -67,20 +67,20 @@ class IndexCommand extends Command {
   }
 }
 
-IndexCommand.description = `List files from Put
+IndexCommand.description = `Manage your Put.io files
 ...
 This command lists all of the files in your root folder by default.
 `
 
 IndexCommand.flags = {
-  sort: flags.string({description: 'property to sort by (prepend ' - ' for descending)'}),
-  filter: flags.string({description: 'filter property by partial string matching, ex: name=foo'}),
+  sort: flags.string({description: '[property to sort by (prepend ' - ' for descending)]'}),
+  filter: flags.string({description: '(filter property by partial string matching, ex: name=foo)'}),
 }
 
 IndexCommand.args = [
   {
     name: 'folderID',
-    description: 'ID of folder to display files in.',
+    description: '(ID of folder to display files in.)',
   },
 ]
 

@@ -26,7 +26,7 @@ class ClearCommand extends Command {
   }
 }
 
-ClearCommand.description = `Clears items in transfers list.
+ClearCommand.description = `Clear transfer list
 ...
 This command clears all completed items from the tranfers list.
 Note: No data will be removed.

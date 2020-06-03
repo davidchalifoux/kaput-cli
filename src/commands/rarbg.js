@@ -85,14 +85,14 @@ Note: The RARBG API can be finicky. If a search returns no results you can try a
 `
 
 RarbgCommand.flags = {
-  folderID: flags.string({char: 'f', description: 'ID of the folder it should download to (on Put.io). Defaults to the root folder.'}),
+  folderID: flags.string({char: 'f', description: '[ID of the folder it should download to (on Put.io). Defaults to the root folder.]'}),
 }
 
 RarbgCommand.args = [
   {
     name: 'query',
     required: true,
-    description: 'Name of the content to search for.',
+    description: '(Name of the content to search for)',
   },
 ]
 

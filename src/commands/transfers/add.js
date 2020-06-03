@@ -40,14 +40,14 @@ Takes a URL or Magnet as an argument and sends it to Put to download.
 `
 
 AddCommand.flags = {
-  folderID: flags.string({char: 'f', description: 'Folder ID to download into. Defaults to root.'}),
+  folderID: flags.string({char: 'f', description: '(Folder ID to download into. Defaults to root.)'}),
 }
 
 AddCommand.args = [
   {
     name: 'URL',
     required: true,
-    description: 'URL of the file to download.',
+    description: '(URL of the file to download)',
   },
 ]
 

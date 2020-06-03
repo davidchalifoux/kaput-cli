@@ -9,7 +9,7 @@ class LogoutCommand extends Command {
   }
 }
 
-LogoutCommand.description = `Unauthenticate the CLI from using your Put.io account.
+LogoutCommand.description = `Logout from Put
 ...
 Removes your account from the CLI.
 `

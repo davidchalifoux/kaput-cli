@@ -75,7 +75,7 @@ SearchCommand.args = [
   {
     name: 'query',
     required: true,
-    description: 'Name of item to search for.',
+    description: '(Name of item to search for)',
   },
 ]
 

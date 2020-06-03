@@ -138,7 +138,7 @@ DownloadCommand.args = [
   {
     name: 'fileID',
     required: true,
-    description: 'ID of the file to download.',
+    description: '(ID of the file to download)',
   },
 ]
 

@@ -53,7 +53,7 @@ class IndexCommand extends Command {
   }
 }
 
-IndexCommand.description = `List transfers
+IndexCommand.description = `Manage your Put.io transfers
 ...
 Lists current transfers on the account.
 `

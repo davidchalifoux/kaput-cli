@@ -28,7 +28,7 @@ class CancelCommand extends Command {
   }
 }
 
-CancelCommand.description = `Cancel an ongoing transfer.
+CancelCommand.description = `Cancel a transfer
 ...
 If transfer is in seeding state, stops seeding. Else, removes transfer entry. Does not remove their files.
 `
@@ -37,7 +37,7 @@ CancelCommand.args = [
   {
     name: 'TransferID',
     required: true,
-    description: 'ID of the transfer to cancel.',
+    description: '(ID of the transfer to cancel)',
   },
 ]
 

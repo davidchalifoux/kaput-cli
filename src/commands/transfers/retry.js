@@ -45,7 +45,7 @@ RetryCommand.args = [
   {
     name: 'TransferID',
     required: true,
-    description: 'ID of the transfer to retry.',
+    description: '(ID of the transfer to retry)',
   },
 ]
 
