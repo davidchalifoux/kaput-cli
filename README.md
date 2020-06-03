@@ -50,6 +50,7 @@ USAGE
 * [`kaput rarbg`](#kaput-rarbg)
 * [`kaput transfers`](#kaput-transfers)
 * [`kaput transfers:add`](#kaput-transfersadd)
+* [`kaput transfers:clear`](#kaput-transfersclear)
 * [`kaput whoami`](#kaput-whoami)
 
 ## `kaput download`
@@ -178,6 +179,24 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\add.js)_
+
+## `kaput transfers:clear`
+
+Describe the command here
+
+```
+USAGE
+  $ kaput transfers:clear
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src\commands\transfers\clear.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\clear.js)_
 
 ## `kaput whoami`
 
