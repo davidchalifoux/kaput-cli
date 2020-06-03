@@ -21,7 +21,7 @@ class WhoamiCommand extends Command {
   }
 }
 
-WhoamiCommand.description = `What username you are logged into.
+WhoamiCommand.description = `Find the username you are logged in as.
 ...
 Checks Put.io for the username of the account currently authenticated with the CLI.
 `
