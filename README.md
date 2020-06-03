@@ -31,6 +31,7 @@ USAGE
 * [`kaput download FILEID`](#kaput-download-fileid)
 * [`kaput files [FOLDERID]`](#kaput-files-folderid)
 * [`kaput files:delete FILEID`](#kaput-filesdelete-fileid)
+* [`kaput files:link FILEID`](#kaput-fileslink-fileid)
 * [`kaput files:search QUERY`](#kaput-filessearch-query)
 * [`kaput help [COMMAND]`](#kaput-help-command)
 * [`kaput login`](#kaput-login)
@@ -103,6 +104,25 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\files\delete.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\delete.js)_
+
+## `kaput files:link FILEID`
+
+Generates download link.
+
+```
+USAGE
+  $ kaput files:link FILEID
+
+ARGUMENTS
+  FILEID  ID of the file to generate a link for.
+
+DESCRIPTION
+  ...
+  This command generates a fresh download link.
+  Note: This link will only work on the device it was generated on.
+```
+
+_See code: [src\commands\files\link.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\link.js)_
 
 ## `kaput files:search QUERY`
 
