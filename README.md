@@ -43,35 +43,35 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`kaput download`](#kaput-download)
+* [`kaput download FILEID`](#kaput-download-fileid)
 * [`kaput files [FOLDERID]`](#kaput-files-folderid)
 * [`kaput files:delete FILEID`](#kaput-filesdelete-fileid)
 * [`kaput files:search QUERY`](#kaput-filessearch-query)
 * [`kaput help [COMMAND]`](#kaput-help-command)
 * [`kaput login`](#kaput-login)
 * [`kaput logout`](#kaput-logout)
-* [`kaput rarbg`](#kaput-rarbg)
+* [`kaput rarbg QUERY`](#kaput-rarbg-query)
 * [`kaput transfers`](#kaput-transfers)
-* [`kaput transfers:add`](#kaput-transfersadd)
-* [`kaput transfers:cancel`](#kaput-transferscancel)
+* [`kaput transfers:add URL`](#kaput-transfersadd-url)
+* [`kaput transfers:cancel TRANSFERID`](#kaput-transferscancel-transferid)
 * [`kaput transfers:clear`](#kaput-transfersclear)
-* [`kaput transfers:retry`](#kaput-transfersretry)
+* [`kaput transfers:retry TRANSFERID`](#kaput-transfersretry-transferid)
 * [`kaput whoami`](#kaput-whoami)
 
-## `kaput download`
+## `kaput download FILEID`
 
 Downloads a file from Put.io
 
 ```
 USAGE
-  $ kaput download
+  $ kaput download FILEID
 
-OPTIONS
-  -f, --fileID=fileID  File ID to download
+ARGUMENTS
+  FILEID  ID of the file to download.
 
 DESCRIPTION
   ...
-  Download a file from Put using its ID.
+  Downloads a file from Put to your local storage.
   If a folder ID is given, a zip is created and that is downloaded instead.
   Note: The ID can be found in the URL of the file from Put.io
 ```
@@ -184,17 +184,19 @@ DESCRIPTION
 
 _See code: [src\commands\logout.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\logout.js)_
 
-## `kaput rarbg`
+## `kaput rarbg QUERY`
 
 Search and add torrents from RARBG
 
 ```
 USAGE
-  $ kaput rarbg
+  $ kaput rarbg QUERY
+
+ARGUMENTS
+  QUERY  Name of the content to search for.
 
 OPTIONS
   -f, --folderID=folderID  ID of the folder it should download to (on Put.io). Defaults to the root folder.
-  -q, --query=query        Name of content to search for.
 
 DESCRIPTION
   ...
@@ -225,17 +227,19 @@ DESCRIPTION
 
 _See code: [src\commands\transfers\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\index.js)_
 
-## `kaput transfers:add`
+## `kaput transfers:add URL`
 
 Add a transfer to Put.io
 
 ```
 USAGE
-  $ kaput transfers:add
+  $ kaput transfers:add URL
+
+ARGUMENTS
+  URL  URL of the file to download.
 
 OPTIONS
-  -f, --folderID=folderID  (Folder ID to download into. Defaults to root.)
-  -u, --url=url            (URL of file to download)
+  -f, --folderID=folderID  Folder ID to download into. Defaults to root.
 
 DESCRIPTION
   ...
@@ -244,16 +248,16 @@ DESCRIPTION
 
 _See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\add.js)_
 
-## `kaput transfers:cancel`
+## `kaput transfers:cancel TRANSFERID`
 
 Cancel an ongoing transfer.
 
 ```
 USAGE
-  $ kaput transfers:cancel
+  $ kaput transfers:cancel TRANSFERID
 
-OPTIONS
-  -i, --transferID=transferID  ID of transfer to cancel.
+ARGUMENTS
+  TRANSFERID  ID of the transfer to cancel.
 
 DESCRIPTION
   ...
@@ -278,16 +282,16 @@ DESCRIPTION
 
 _See code: [src\commands\transfers\clear.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\clear.js)_
 
-## `kaput transfers:retry`
+## `kaput transfers:retry TRANSFERID`
 
 Retry a failed transfer
 
 ```
 USAGE
-  $ kaput transfers:retry
+  $ kaput transfers:retry TRANSFERID
 
-OPTIONS
-  -i, --transferID=transferID  ID of transfer to retry.
+ARGUMENTS
+  TRANSFERID  ID of the transfer to retry.
 
 DESCRIPTION
   ...

@@ -2,7 +2,7 @@
 /* eslint-disable no-process-exit */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable new-cap */
-const {Command, flags} = require('@oclif/command')
+const {Command} = require('@oclif/command')
 const {cli} = require('cli-ux')
 const put = require('../put-api')
 const requireAuth = require('../require-auth')
@@ -12,19 +12,14 @@ const {DownloaderHelper} = require('node-downloader-helper')
 
 class DownloadCommand extends Command {
   async run() {
-    const {flags} = this.parse(DownloadCommand)
-    let fileID = flags.fileID || null
+    const {argv} = this.parse(DownloadCommand)
+    const fileID = argv[0]
     let fileType = null
     let fileURL = null
     let fileName = null
 
     // Check for auth
     await requireAuth()
-
-    // Get file ID
-    while (!fileID) {
-      fileID = await cli.prompt('What is the file ID?')
-    }
 
     // Get the file's info
     cli.action.start('Gathering file info')
@@ -134,13 +129,17 @@ class DownloadCommand extends Command {
 
 DownloadCommand.description = `Downloads a file from Put.io
 ...
-Download a file from Put using its ID.
+Downloads a file from Put to your local storage.
 If a folder ID is given, a zip is created and that is downloaded instead.
 Note: The ID can be found in the URL of the file from Put.io
 `
 
-DownloadCommand.flags = {
-  fileID: flags.string({char: 'f', description: 'File ID to download'}),
-}
+DownloadCommand.args = [
+  {
+    name: 'fileID',
+    required: true,
+    description: 'ID of the file to download.',
+  },
+]
 
 module.exports = DownloadCommand

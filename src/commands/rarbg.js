@@ -15,16 +15,12 @@ const rarbg = new RarbgApi()
 class RarbgCommand extends Command {
   async run() {
     const {flags} = this.parse(RarbgCommand)
-    let query = flags.query || null
+    const {argv} = this.parse(RarbgCommand)
+    const query = argv[0]
     const folderID = flags.folderID || 0
 
     // Check for auth
     await requireAuth()
-
-    // Confirm search query
-    while (!query) {
-      query = await cli.prompt(chalk.bold('Search RARBG'))
-    }
 
     // Search RARBG
     let searchResults = []
@@ -89,8 +85,15 @@ Note: The RARBG API can be finicky. If a search returns no results you can try a
 `
 
 RarbgCommand.flags = {
-  query: flags.string({char: 'q', description: 'Name of content to search for.'}),
   folderID: flags.string({char: 'f', description: 'ID of the folder it should download to (on Put.io). Defaults to the root folder.'}),
 }
+
+RarbgCommand.args = [
+  {
+    name: 'query',
+    required: true,
+    description: 'Name of the content to search for.',
+  },
+]
 
 module.exports = RarbgCommand
