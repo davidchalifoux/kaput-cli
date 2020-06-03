@@ -12,9 +12,7 @@ CLI tools for Put.io
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+
 # Usage
 <!-- usage -->
 ```sh-session
