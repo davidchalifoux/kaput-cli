@@ -3,10 +3,15 @@
 /* eslint-disable new-cap */
 const {Command} = require('@oclif/command')
 const put = require('../put-api')
+const requireAuth = require('../require-auth')
 const chalk = require('chalk')
 
 class WhoamiCommand extends Command {
   async run() {
+    // Check for auth
+    await requireAuth()
+
+    // Get username
     await put.User.Info()
     .then(r => this.log('Username:', chalk.yellow(r.data.info.username)))
     .catch(error => {

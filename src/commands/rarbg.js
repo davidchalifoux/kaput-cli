@@ -6,6 +6,7 @@ const {Command, flags} = require('@oclif/command')
 const RarbgApi = require('rarbg')
 const {cli} = require('cli-ux')
 const put = require('../put-api')
+const requireAuth = require('../require-auth')
 const chalk = require('chalk')
 const inquirer = require('inquirer')
 
@@ -18,15 +19,7 @@ class RarbgCommand extends Command {
     const folderID = flags.folderID || 0
 
     // Check for auth
-    cli.action.start('Checking authentication')
-    await put.User.Info()
-    .catch(() => {
-      this.log(chalk.red('Error: You must first login to the CLI using the "login" command.'))
-      process.exit(1)
-    })
-    .finally(() => {
-      cli.action.stop()
-    })
+    await requireAuth()
 
     // Confirm search query
     while (!query) {

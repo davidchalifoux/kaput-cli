@@ -5,6 +5,7 @@
 const {Command, flags} = require('@oclif/command')
 const {cli} = require('cli-ux')
 const put = require('../put-api')
+const requireAuth = require('../require-auth')
 const formatBytes = require('../format-bytes')
 const chalk = require('chalk')
 const {DownloaderHelper} = require('node-downloader-helper')
@@ -18,15 +19,7 @@ class DownloadCommand extends Command {
     let fileName = null
 
     // Check for auth
-    cli.action.start('Checking authentication')
-    await put.User.Info()
-    .catch(() => {
-      this.log(chalk.red('Error: You must first login to the CLI using the "login" command.'))
-      process.exit(1)
-    })
-    .finally(() => {
-      cli.action.stop()
-    })
+    await requireAuth()
 
     // Get file ID
     while (!fileID) {

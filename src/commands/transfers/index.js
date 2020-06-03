@@ -4,6 +4,7 @@
 const {Command, flags} = require('@oclif/command')
 const {cli} = require('cli-ux')
 const put = require('../../put-api')
+const requireAuth = require('../../require-auth')
 const chalk = require('chalk')
 
 class IndexCommand extends Command {
@@ -11,15 +12,7 @@ class IndexCommand extends Command {
     const {flags} = this.parse(IndexCommand)
 
     // Check for auth
-    cli.action.start('Checking authentication')
-    await put.User.Info()
-    .catch(() => {
-      this.log(chalk.red('Error: You must first login to the CLI using the "login" command.'))
-      process.exit(1)
-    })
-    .finally(() => {
-      cli.action.stop()
-    })
+    await requireAuth()
 
     // Query Put
     await put.Transfers.Query()
