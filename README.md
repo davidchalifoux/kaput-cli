@@ -44,6 +44,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`kaput download`](#kaput-download)
+* [`kaput files`](#kaput-files)
 * [`kaput help [COMMAND]`](#kaput-help-command)
 * [`kaput login`](#kaput-login)
 * [`kaput logout`](#kaput-logout)
@@ -74,6 +75,26 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\download.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\download.js)_
+
+## `kaput files`
+
+List files from Put
+
+```
+USAGE
+  $ kaput files
+
+OPTIONS
+  -i, --folderID=folderID  folderID to display files in
+  --filter=filter          filter property by partial string matching, ex: name=foo
+  --sort=sort
+
+DESCRIPTION
+  ...
+  This command lists all of the files in your root folder by default.
+```
+
+_See code: [src\commands\files\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\index.js)_
 
 ## `kaput help [COMMAND]`
 
@@ -195,7 +216,7 @@ OPTIONS
 
 DESCRIPTION
   ...
-  This command allows you to cancel an ongoing transfer.
+  If transfer is in seeding state, stops seeding. Else, removes transfer entry. Does not remove their files.
 ```
 
 _See code: [src\commands\transfers\cancel.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\cancel.js)_
