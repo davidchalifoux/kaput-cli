@@ -40,6 +40,11 @@ class IndexCommand extends Command {
 
       // Display table
       cli.table(data, columns, options)
+
+      // Friendly display if there's nothing in the list
+      if (data.length === 0) {
+        this.log(chalk.yellow('No transfers! :)'))
+      }
     })
     .catch(error => {
       this.log(chalk.red('Error:', error.data.error_message))
