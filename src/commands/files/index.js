@@ -12,7 +12,8 @@ const moment = require('moment')
 class IndexCommand extends Command {
   async run() {
     const {flags} = this.parse(IndexCommand)
-    const folderID = flags.folderID || 0
+    const {argv} = this.parse(IndexCommand)
+    const folderID = argv[0] || 0
 
     // Check for auth
     await requireAuth()
@@ -74,7 +75,13 @@ This command lists all of the files in your root folder by default.
 IndexCommand.flags = {
   sort: flags.string({description: 'property to sort by (prepend ' - ' for descending)'}),
   filter: flags.string({description: 'filter property by partial string matching, ex: name=foo'}),
-  folderID: flags.string({char: 'i', description: 'folderID to display files in'}),
 }
+
+IndexCommand.args = [
+  {
+    name: 'folderID',
+    description: 'ID of folder to display files in.',
+  },
+]
 
 module.exports = IndexCommand

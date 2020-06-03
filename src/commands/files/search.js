@@ -11,17 +11,11 @@ const moment = require('moment')
 
 class SearchCommand extends Command {
   async run() {
-    const {flags} = this.parse(SearchCommand)
-    let query = flags.name
+    const {argv} = this.parse(SearchCommand)
+    const query = argv[0]
 
     // Check for auth
     await requireAuth()
-
-    // Confirm query
-    while (!query) {
-      // eslint-disable-next-line no-await-in-loop
-      query = await cli.prompt('Search')
-    }
 
     // Query Put
     await put.Files.Search(query)
@@ -77,8 +71,12 @@ SearchCommand.description = `Search for a file
 This command allows you search your entire account for a file.
 `
 
-SearchCommand.flags = {
-  name: flags.string({char: 'n', description: 'name of file to search for'}),
-}
+SearchCommand.args = [
+  {
+    name: 'query',
+    required: true,
+    description: 'Name of item to search for.',
+  },
+]
 
 module.exports = SearchCommand

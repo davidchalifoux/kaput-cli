@@ -44,9 +44,9 @@ USAGE
 # Commands
 <!-- commands -->
 * [`kaput download`](#kaput-download)
-* [`kaput files`](#kaput-files)
+* [`kaput files [FOLDERID]`](#kaput-files-folderid)
 * [`kaput files:delete FILEID`](#kaput-filesdelete-fileid)
-* [`kaput files:search`](#kaput-filessearch)
+* [`kaput files:search QUERY`](#kaput-filessearch-query)
 * [`kaput help [COMMAND]`](#kaput-help-command)
 * [`kaput login`](#kaput-login)
 * [`kaput logout`](#kaput-logout)
@@ -78,17 +78,19 @@ DESCRIPTION
 
 _See code: [src\commands\download.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\download.js)_
 
-## `kaput files`
+## `kaput files [FOLDERID]`
 
 List files from Put
 
 ```
 USAGE
-  $ kaput files
+  $ kaput files [FOLDERID]
+
+ARGUMENTS
+  FOLDERID  ID of folder to display files in.
 
 OPTIONS
-  -i, --folderID=folderID  folderID to display files in
-  --filter=filter          filter property by partial string matching, ex: name=foo
+  --filter=filter  filter property by partial string matching, ex: name=foo
   --sort=sort
 
 DESCRIPTION
@@ -117,16 +119,16 @@ DESCRIPTION
 
 _See code: [src\commands\files\delete.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\delete.js)_
 
-## `kaput files:search`
+## `kaput files:search QUERY`
 
 Search for a file
 
 ```
 USAGE
-  $ kaput files:search
+  $ kaput files:search QUERY
 
-OPTIONS
-  -n, --name=name  name of file to search for
+ARGUMENTS
+  QUERY  Name of item to search for.
 
 DESCRIPTION
   ...
