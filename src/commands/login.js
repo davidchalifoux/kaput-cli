@@ -44,6 +44,7 @@ class LoginCommand extends Command {
 LoginCommand.description = `Login to Put.io
 ...
 Authenticates the CLI with your Put.io account.
+Note: This stores the access token locally.
 `
 
 module.exports = LoginCommand
