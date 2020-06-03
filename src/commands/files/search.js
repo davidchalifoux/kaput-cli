@@ -72,9 +72,9 @@ class SearchCommand extends Command {
   }
 }
 
-SearchCommand.description = `Describe the command here
+SearchCommand.description = `Search for a file
 ...
-Extra documentation goes here
+This command allows you search your entire account for a file.
 `
 
 SearchCommand.flags = {

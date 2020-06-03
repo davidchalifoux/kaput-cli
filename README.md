@@ -99,18 +99,18 @@ _See code: [src\commands\files\index.js](https://github.com/davidchalifoux/kaput
 
 ## `kaput files:search`
 
-Describe the command here
+Search for a file
 
 ```
 USAGE
   $ kaput files:search
 
 OPTIONS
-  -n, --name=name  name to print
+  -n, --name=name  name of file to search for
 
 DESCRIPTION
   ...
-  Extra documentation goes here
+  This command allows you search your entire account for a file.
 ```
 
 _See code: [src\commands\files\search.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\search.js)_
