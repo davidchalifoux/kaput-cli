@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-process-exit */
 /* eslint-disable no-process-exit */
 /* eslint-disable new-cap */
-const {Command, flags} = require('@oclif/command')
+const {Command} = require('@oclif/command')
 const {cli} = require('cli-ux')
 const put = require('../../put-api')
 const requireAuth = require('../../require-auth')
@@ -9,8 +9,8 @@ const chalk = require('chalk')
 
 class RetryCommand extends Command {
   async run() {
-    const {flags} = this.parse(RetryCommand)
-    let transferID = flags.transferID || null
+    const {argv} = this.parse(RetryCommand)
+    let transferID = argv[0]
 
     // Check for auth
     await requireAuth()
@@ -41,8 +41,12 @@ RetryCommand.description = `Retry a failed transfer
 Tells Put.io to try a transfer again.
 `
 
-RetryCommand.flags = {
-  transferID: flags.string({char: 'i', description: 'ID of transfer to retry.'}),
-}
+RetryCommand.args = [
+  {
+    name: 'TransferID',
+    required: true,
+    description: 'ID of the transfer to retry.',
+  },
+]
 
 module.exports = RetryCommand

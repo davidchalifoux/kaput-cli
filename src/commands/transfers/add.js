@@ -10,18 +10,14 @@ const chalk = require('chalk')
 
 class AddCommand extends Command {
   async run() {
-    // Process flags
+    // Process flags & args
     const {flags} = this.parse(AddCommand)
-    let url = flags.url || null
+    const {argv} = this.parse(AddCommand)
+    const url = argv[0]
     const folderID = flags.folderID || 0
 
     // Check for auth
     await requireAuth()
-
-    // Confirm URL
-    while (!url) {
-      url = await cli.prompt('File URL')
-    }
 
     // Send to put
     cli.action.start('Sending to Put')
@@ -44,8 +40,15 @@ Takes a URL or Magnet as an argument and sends it to Put to download.
 `
 
 AddCommand.flags = {
-  url: flags.string({char: 'u', description: '(URL of file to download)'}),
-  folderID: flags.string({char: 'f', description: '(Folder ID to download into. Defaults to root.)'}),
+  folderID: flags.string({char: 'f', description: 'Folder ID to download into. Defaults to root.'}),
 }
+
+AddCommand.args = [
+  {
+    name: 'URL',
+    required: true,
+    description: 'URL of the file to download.',
+  },
+]
 
 module.exports = AddCommand
