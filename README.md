@@ -51,6 +51,7 @@ USAGE
 * [`kaput transfers`](#kaput-transfers)
 * [`kaput transfers:add`](#kaput-transfersadd)
 * [`kaput transfers:clear`](#kaput-transfersclear)
+* [`kaput transfers:retry`](#kaput-transfersretry)
 * [`kaput whoami`](#kaput-whoami)
 
 ## `kaput download`
@@ -182,21 +183,37 @@ _See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kap
 
 ## `kaput transfers:clear`
 
-Describe the command here
+Clears items in transfers list.
 
 ```
 USAGE
   $ kaput transfers:clear
 
-OPTIONS
-  -n, --name=name  name to print
-
 DESCRIPTION
   ...
-  Extra documentation goes here
+  This command clears all completed items from the tranfers list.
+  Note: No data will be removed.
 ```
 
 _See code: [src\commands\transfers\clear.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\clear.js)_
+
+## `kaput transfers:retry`
+
+Retry a failed transfer
+
+```
+USAGE
+  $ kaput transfers:retry
+
+OPTIONS
+  -i, --transferID=transferID  ID of transfer to retry.
+
+DESCRIPTION
+  ...
+  Tells Put.io to try a transfer again.
+```
+
+_See code: [src\commands\transfers\retry.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\retry.js)_
 
 ## `kaput whoami`
 
