@@ -77,7 +77,7 @@ USAGE
   $ kaput download FILEID
 
 ARGUMENTS
-  FILEID  ID of the file to download.
+  FILEID  (ID of the file to download)
 
 DESCRIPTION
   ...
@@ -97,10 +97,10 @@ USAGE
   $ kaput files [FOLDERID]
 
 ARGUMENTS
-  FOLDERID  ID of folder to display files in.
+  FOLDERID  (ID of folder to display files in.)
 
 OPTIONS
-  --filter=filter  filter property by partial string matching, ex: name=foo
+  --filter=filter  (filter property by partial string matching, ex: name=foo)
   --sort=sort
 
 DESCRIPTION
@@ -119,7 +119,7 @@ USAGE
   $ kaput files:delete FILEID
 
 ARGUMENTS
-  FILEID  ID of the file to delete
+  FILEID  (ID of the file to delete)
 
 DESCRIPTION
   ...
@@ -131,14 +131,14 @@ _See code: [src\commands\files\delete.js](https://github.com/davidchalifoux/kapu
 
 ## `kaput files:link FILEID`
 
-Generates download link.
+Generate a download link
 
 ```
 USAGE
   $ kaput files:link FILEID
 
 ARGUMENTS
-  FILEID  ID of the file to generate a link for.
+  FILEID  (ID of the file to generate a link for)
 
 DESCRIPTION
   ...
@@ -157,7 +157,7 @@ USAGE
   $ kaput files:search QUERY
 
 ARGUMENTS
-  QUERY  Name of item to search for.
+  QUERY  (Name of item to search for)
 
 DESCRIPTION
   ...
@@ -201,7 +201,7 @@ _See code: [src\commands\login.js](https://github.com/davidchalifoux/kaput-cli/b
 
 ## `kaput logout`
 
-Unauthenticate the CLI from using your Put.io account.
+Logout from Put
 
 ```
 USAGE
@@ -223,10 +223,10 @@ USAGE
   $ kaput rarbg QUERY
 
 ARGUMENTS
-  QUERY  Name of the content to search for.
+  QUERY  (Name of the content to search for)
 
 OPTIONS
-  -f, --folderID=folderID  ID of the folder it should download to (on Put.io). Defaults to the root folder.
+  -f, --folderID=folderID  [ID of the folder it should download to (on Put.io). Defaults to the root folder.]
 
 DESCRIPTION
   ...
@@ -266,10 +266,10 @@ USAGE
   $ kaput transfers:add URL
 
 ARGUMENTS
-  URL  URL of the file to download.
+  URL  (URL of the file to download)
 
 OPTIONS
-  -f, --folderID=folderID  Folder ID to download into. Defaults to root.
+  -f, --folderID=folderID  (Folder ID to download into. Defaults to root.)
 
 DESCRIPTION
   ...
@@ -280,14 +280,14 @@ _See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kap
 
 ## `kaput transfers:cancel TRANSFERID`
 
-Cancel an ongoing transfer.
+Cancel a transfer
 
 ```
 USAGE
   $ kaput transfers:cancel TRANSFERID
 
 ARGUMENTS
-  TRANSFERID  ID of the transfer to cancel.
+  TRANSFERID  (ID of the transfer to cancel)
 
 DESCRIPTION
   ...
@@ -298,7 +298,7 @@ _See code: [src\commands\transfers\cancel.js](https://github.com/davidchalifoux/
 
 ## `kaput transfers:clear`
 
-Clears items in transfers list.
+Clear transfer list
 
 ```
 USAGE
@@ -321,7 +321,7 @@ USAGE
   $ kaput transfers:retry TRANSFERID
 
 ARGUMENTS
-  TRANSFERID  ID of the transfer to retry.
+  TRANSFERID  (ID of the transfer to retry)
 
 DESCRIPTION
   ...
@@ -332,7 +332,7 @@ _See code: [src\commands\transfers\retry.js](https://github.com/davidchalifoux/k
 
 ## `kaput whoami`
 
-Find the username you are logged in as.
+Display your username
 
 ```
 USAGE
