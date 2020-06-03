@@ -10,7 +10,7 @@ const chalk = require('chalk')
 class DeleteCommand extends Command {
   async run() {
     const {argv} = this.parse(DeleteCommand)
-    const fileID = argv[0] || null
+    const fileID = argv[0]
 
     // Check for auth
     await requireAuth()
