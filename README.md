@@ -1,4 +1,4 @@
-kaput-cli
+Kaput-CLI
 =========
 
 CLI tools for Put.io
@@ -12,9 +12,6 @@ CLI tools for Put.io
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
 # Usage
 <!-- usage -->
 ```sh-session
@@ -23,18 +20,6 @@ $ kaput COMMAND
 running command...
 $ kaput (-v|--version|version)
 kaput-cli/0.0.1 win32-x64 node-v12.17.0
-$ kaput --help [COMMAND]
-USAGE
-  $ kaput COMMAND
-...
-```
-<!-- usagestop -->
-```sh-session
-$ npm install -g kaput-cli
-$ kaput COMMAND
-running command...
-$ kaput (-v|--version|version)
-kaput-cli/0.0.1 darwin-x64 node-v12.17.0
 $ kaput --help [COMMAND]
 USAGE
   $ kaput COMMAND
@@ -314,115 +299,4 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\whoami.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\whoami.js)_
-<!-- commandsstop -->
-* [`kaput download`](#kaput-download)
-* [`kaput help [COMMAND]`](#kaput-help-command)
-* [`kaput login`](#kaput-login)
-* [`kaput logout`](#kaput-logout)
-* [`kaput rarbg`](#kaput-rarbg)
-* [`kaput whoami`](#kaput-whoami)
-
-## `kaput download`
-
-Downloads a file from Put.io
-
-```
-USAGE
-  $ kaput download
-
-OPTIONS
-  -f, --fileID=fileID  File ID to download
-
-DESCRIPTION
-  ...
-  Download a file from Put using its ID.
-  If a folder ID is given, a zip is created and that is downloaded instead.
-  Note: The ID can be found in the URL of the file from Put.io
-```
-
-_See code: [src/commands/download.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src/commands/download.js)_
-
-## `kaput help [COMMAND]`
-
-display help for kaput
-
-```
-USAGE
-  $ kaput help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.0.1/src/commands/help.ts)_
-
-## `kaput login`
-
-Login to Put.io
-
-```
-USAGE
-  $ kaput login
-
-DESCRIPTION
-  ...
-  Authenticates the CLI with your Put.io account.
-```
-
-_See code: [src/commands/login.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src/commands/login.js)_
-
-## `kaput logout`
-
-Unauthenticate the CLI from using your Put.io account.
-
-```
-USAGE
-  $ kaput logout
-
-DESCRIPTION
-  ...
-  Removes your account from the CLI.
-```
-
-_See code: [src/commands/logout.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src/commands/logout.js)_
-
-## `kaput rarbg`
-
-Search and add torrents from RARBG
-
-```
-USAGE
-  $ kaput rarbg
-
-OPTIONS
-  -f, --folderID=folderID  ID of the folder it should download to (on Put.io). Defaults to the root folder.
-  -q, --query=query        Name of content to search for.
-
-DESCRIPTION
-  ...
-  Searches RARBG for matching content.
-  Once a torrent is selected, it is sent to Put.io as a transfer.
-  Note: The RARBG API can be finicky. If a search returns no results you can try again, or try slightly altering your 
-  search.
-```
-
-_See code: [src/commands/rarbg.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src/commands/rarbg.js)_
-
-## `kaput whoami`
-
-What username you are logged into.
-
-```
-USAGE
-  $ kaput whoami
-
-DESCRIPTION
-  ...
-  Checks Put.io for the username of the account currently authenticated with the CLI.
-```
-
-_See code: [src/commands/whoami.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src/commands/whoami.js)_
 <!-- commandsstop -->
