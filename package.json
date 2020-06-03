@@ -10,6 +10,7 @@
   "dependencies": {
     "@oclif/command": "^1.6.1",
     "@oclif/config": "^1.15.1",
+    "@oclif/plugin-autocomplete": "^0.2.0",
     "@oclif/plugin-help": "^3.0.1",
     "@putdotio/api-client": "^7.10.1",
     "chalk": "^4.0.0",
@@ -50,7 +51,8 @@
     "commands": "./src/commands",
     "bin": "kaput",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-autocomplete"
     ]
   },
   "repository": "davidchalifoux/kaput-cli",

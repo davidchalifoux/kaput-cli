@@ -28,6 +28,7 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`kaput autocomplete [SHELL]`](#kaput-autocomplete-shell)
 * [`kaput download FILEID`](#kaput-download-fileid)
 * [`kaput files [FOLDERID]`](#kaput-files-folderid)
 * [`kaput files:delete FILEID`](#kaput-filesdelete-fileid)
@@ -43,6 +44,29 @@ USAGE
 * [`kaput transfers:clear`](#kaput-transfersclear)
 * [`kaput transfers:retry TRANSFERID`](#kaput-transfersretry-transferid)
 * [`kaput whoami`](#kaput-whoami)
+
+## `kaput autocomplete [SHELL]`
+
+display autocomplete installation instructions
+
+```
+USAGE
+  $ kaput autocomplete [SHELL]
+
+ARGUMENTS
+  SHELL  shell type
+
+OPTIONS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+EXAMPLES
+  $ kaput autocomplete
+  $ kaput autocomplete bash
+  $ kaput autocomplete zsh
+  $ kaput autocomplete --refresh-cache
+```
+
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.2.0/src\commands\autocomplete\index.ts)_
 
 ## `kaput download FILEID`
 
@@ -170,6 +194,7 @@ USAGE
 DESCRIPTION
   ...
   Authenticates the CLI with your Put.io account.
+  Note: This stores the access token locally.
 ```
 
 _See code: [src\commands\login.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\login.js)_
