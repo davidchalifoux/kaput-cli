@@ -30,7 +30,6 @@ class AddCommand extends Command {
       process.exit(1)
     })
     cli.action.stop()
-    this.log(chalk.green('All files sent to Put.'))
   }
 }
 
