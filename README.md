@@ -45,6 +45,7 @@ USAGE
 <!-- commands -->
 * [`kaput download`](#kaput-download)
 * [`kaput files`](#kaput-files)
+* [`kaput files:delete FILEID`](#kaput-filesdelete-fileid)
 * [`kaput files:search`](#kaput-filessearch)
 * [`kaput help [COMMAND]`](#kaput-help-command)
 * [`kaput login`](#kaput-login)
@@ -96,6 +97,25 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\files\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\index.js)_
+
+## `kaput files:delete FILEID`
+
+Delete a file
+
+```
+USAGE
+  $ kaput files:delete FILEID
+
+ARGUMENTS
+  FILEID  ID of the file to delete
+
+DESCRIPTION
+  ...
+  This will delete a file or folder from your account.
+  Note: If you don't have the trash enabled on your account, this data will be unrecoverable.
+```
+
+_See code: [src\commands\files\delete.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\delete.js)_
 
 ## `kaput files:search`
 
