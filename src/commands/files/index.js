@@ -33,15 +33,16 @@ class IndexCommand extends Command {
         file_type: {
           header: 'Type',
         },
+        size: {
+          header: 'Size',
+          get: row => formatBytes(row.size),
+        },
         // eslint-disable-next-line camelcase
         updated_at: {
           header: 'Date',
           get: row => moment.utc(row.updated_at).fromNow(),
         },
-        size: {
-          header: 'Size',
-          get: row => formatBytes(row.size),
-        },
+
       }
 
       // Setup options
