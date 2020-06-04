@@ -27,18 +27,7 @@ USAGE
 ...
 ```
 <!-- usagestop -->
-```sh-session
-$ npm install -g kaput-cli
-$ kaput COMMAND
-running command...
-$ kaput (-v|--version|version)
-kaput-cli/0.0.1 darwin-x64 node-v12.17.0
-$ kaput --help [COMMAND]
-USAGE
-  $ kaput COMMAND
-...
-```
-<!-- usagestop -->
+
 # Commands
 <!-- commands -->
 * [`kaput autocomplete [SHELL]`](#kaput-autocomplete-shell)
