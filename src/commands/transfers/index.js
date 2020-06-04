@@ -27,8 +27,9 @@ class IndexCommand extends Command {
         },
         name: {},
         // eslint-disable-next-line camelcase
-        status_message: {
-          header: 'Status',
+        percent_done: {
+          header: 'Progress',
+          get: row => row.percent_done + '%',
         },
       }
 
