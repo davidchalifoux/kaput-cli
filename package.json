@@ -43,7 +43,10 @@
   ],
   "homepage": "https://github.com/davidchalifoux/kaput-cli",
   "keywords": [
-    "oclif"
+    "oclif",
+    "put",
+    "put.io",
+    "kaput"
   ],
   "license": "MIT",
   "main": "src/index.js",
