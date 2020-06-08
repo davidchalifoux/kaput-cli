@@ -56,7 +56,7 @@ class RarbgCommand extends Command {
       selectedTorrents = answers.torrent
     })
     .catch(error => {
-      this.log(chalk.red('Error:', error))
+      this.log(chalk.red(error))
       process.exit(1)
     })
 
