@@ -106,6 +106,7 @@ ARGUMENTS
 OPTIONS
   --all            (all files of the user will be returned)
   --filter=filter  (filter property by partial string matching, ex: name=foo)
+  --json           (output data as pure JSON instead of in a table)
   --limit=limit    (number of items to return, if -1 is used, all files will be retreived recursively. Default is 1000.)
   --sort=sort
 

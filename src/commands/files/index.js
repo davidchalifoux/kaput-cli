@@ -55,40 +55,47 @@ class IndexCommand extends Command {
         }
       }
 
-      // Setup columns
-      const columns = {
-        id: {
-          header: 'ID',
-        },
-        name: {},
-        // eslint-disable-next-line camelcase
-        file_type: {
-          header: 'Type',
-        },
-        size: {
-          header: 'Size',
-          get: row => formatBytes(row.size),
-        },
-        // eslint-disable-next-line camelcase
-        updated_at: {
-          header: 'Date',
-          get: row => moment.utc(row.updated_at).fromNow(),
-        },
+      // Check for JSON flag
+      if (flags.json) {
+        // Output to JSON
+        this.log(JSON.stringify(data))
+      } else {
+        // Display table
+        // Setup columns
+        const columns = {
+          id: {
+            header: 'ID',
+          },
+          name: {},
+          // eslint-disable-next-line camelcase
+          file_type: {
+            header: 'Type',
+          },
+          size: {
+            header: 'Size',
+            get: row => formatBytes(row.size),
+          },
+          // eslint-disable-next-line camelcase
+          updated_at: {
+            header: 'Date',
+            get: row => moment.utc(row.updated_at).fromNow(),
+          },
 
-      }
+        }
 
-      // Setup options
-      const options = {
-        sort: flags.sort,
-        filter: flags.filter,
-      }
+        // Setup options
+        const options = {
+          sort: flags.sort,
+          filter: flags.filter,
+        }
 
-      // Display table
-      cli.table(data, columns, options)
+        // Display table
+        cli.table(data, columns, options)
 
-      // Friendly display if there's nothing in the list
-      if (data.length === 0) {
-        this.log(chalk.yellow('No files! :)'))
+        // Friendly display if there's nothing in the list
+        if (data.length === 0) {
+          this.log(chalk.yellow('No files! :)'))
+        }
       }
     })
     .catch(error => {
@@ -108,6 +115,7 @@ IndexCommand.flags = {
   filter: flags.string({description: '(filter property by partial string matching, ex: name=foo)'}),
   all: flags.boolean({description: '(all files of the user will be returned)'}),
   limit: flags.integer({description: '(number of items to return, if -1 is used, all files will be retreived recursively. Default is 1000.)'}),
+  json: flags.boolean({description: '(output data as pure JSON instead of in a table)'}),
 }
 
 IndexCommand.args = [
