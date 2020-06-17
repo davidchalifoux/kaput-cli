@@ -13,16 +13,47 @@ class IndexCommand extends Command {
   async run() {
     const {flags} = this.parse(IndexCommand)
     const {argv} = this.parse(IndexCommand)
-    const folderID = argv[0] || 0
+    let folderID = argv[0] || 0
+    let limit = flags.limit || 1000
+    let recursively = false
+
+    // Process --limit -1
+    if (limit === -1) {
+      recursively = true
+      limit = 1000
+    }
+
+    // Process --all flag
+    if (flags.all) {
+      folderID = -1
+    }
 
     // Check for auth
     await requireAuth()
 
     // Query Put
-    await put.Files.Query(folderID)
-    .then(r => {
+    await put.Files.Query(folderID, {limit: limit})
+    .then(async r => {
       // Setup data
-      const data = r.data.files
+      let data = r.data.files
+
+      // Check for cursor if limit === -1
+      if (recursively) {
+        let cursor = r.data.cursor
+        // Fetch all data
+        while (cursor !== null) {
+        // eslint-disable-next-line no-await-in-loop
+          await put.Files.Continue(cursor)
+          .then(r => {
+            cursor = r.data.cursor
+            data = data.concat(r.data.files)
+          })
+          .catch(error => {
+            this.log(chalk.red('Error:', error.data.error_message))
+            process.exit(1)
+          })
+        }
+      }
 
       // Setup columns
       const columns = {
@@ -75,6 +106,8 @@ This command lists all of the files in your root folder by default.
 IndexCommand.flags = {
   sort: flags.string({description: '[property to sort by (prepend ' - ' for descending)]'}),
   filter: flags.string({description: '(filter property by partial string matching, ex: name=foo)'}),
+  all: flags.boolean({description: '(all files of the user will be returned)'}),
+  limit: flags.integer({description: '(number of items to return, if -1 is used, all files will be retreived recursively. Default is 1000.)'}),
 }
 
 IndexCommand.args = [
