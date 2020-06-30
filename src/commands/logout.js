@@ -4,7 +4,7 @@ const chalk = require('chalk')
 
 class LogoutCommand extends Command {
   async run() {
-    config.clear()
+    config.delete('default')
     this.log(chalk.yellow('Account removed from the CLI.'))
   }
 }

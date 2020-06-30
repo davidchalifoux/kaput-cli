@@ -14,7 +14,6 @@ class LoginCommand extends Command {
     await put.Auth.GetCode('4701')
     .then(r => {
       authCode = r.data.code
-      config.set('authCode', authCode)
     })
     .catch(error => {
       this.log(chalk.red('Error:', error.data.error_message))
@@ -30,7 +29,7 @@ class LoginCommand extends Command {
 
     await put.Auth.CheckCodeMatch(authCode)
     .then(r => {
-      config.set('accessToken', r.data.oauth_token)
+      config.set('default.authToken', r.data.oauth_token)
     })
     .catch(error => {
       this.log(chalk.red('Error:', error.data.error_message))
