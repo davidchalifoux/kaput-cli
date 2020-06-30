@@ -2,11 +2,11 @@
 /* eslint-disable unicorn/no-process-exit */
 /* eslint-disable no-process-exit */
 /* eslint-disable new-cap */
-const put = require('./put-api')
+const Put = require('./put-api')
 const chalk = require('chalk')
 
 async function requireAuth() {
-  await put.User.Info()
+  await Put.User.Info()
   .catch(() => {
     console.log(chalk.red('Error: You must first login to the CLI using the "login" command.'))
     process.exit(1)
