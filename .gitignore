@@ -7,5 +7,4 @@
 /yarn.lock
 node_modules
 .env
-package-lock.json
 oclif.manifest.json
