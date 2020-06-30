@@ -20,31 +20,38 @@ class IndexCommand extends Command {
       // Setup data
       const data = r.data.transfers.reverse()
 
-      // Setup columns
-      const columns = {
-        id: {
-          header: 'ID',
-        },
-        name: {},
-        // eslint-disable-next-line camelcase
-        percent_done: {
-          header: 'Progress',
-          get: row => row.percent_done + '%',
-        },
-      }
+      // Check for JSON flag
+      if (flags.json) {
+        // Output to JSON
+        this.log(JSON.stringify(data))
+      } else {
+        // Output as table
+        // Setup columns
+        const columns = {
+          id: {
+            header: 'ID',
+          },
+          name: {},
+          // eslint-disable-next-line camelcase
+          percent_done: {
+            header: 'Progress',
+            get: row => row.percent_done + '%',
+          },
+        }
 
-      // Setup options
-      const options = {
-        sort: flags.sort,
-        filter: flags.filter,
-      }
+        // Setup options
+        const options = {
+          sort: flags.sort,
+          filter: flags.filter,
+        }
 
-      // Display table
-      cli.table(data, columns, options)
+        // Display table
+        cli.table(data, columns, options)
 
-      // Friendly display if there's nothing in the list
-      if (data.length === 0) {
-        this.log(chalk.yellow('No transfers! :)'))
+        // Friendly display if there's nothing in the list
+        if (data.length === 0) {
+          this.log(chalk.yellow('No transfers! :)'))
+        }
       }
     })
     .catch(error => {
@@ -60,8 +67,9 @@ Lists current transfers on the account.
 `
 
 IndexCommand.flags = {
-  sort: flags.string({description: 'property to sort by (prepend ' - ' for descending)'}),
-  filter: flags.string({description: 'filter property by partial string matching, ex: name=foo'}),
+  sort: flags.string({description: '(property to sort by [prepend ' - ' for descending])'}),
+  filter: flags.string({description: '(filter property by partial string matching, ex: name=foo)'}),
+  json: flags.boolean({description: '(output data as pure JSON instead of in a table)'}),
 }
 
 module.exports = IndexCommand
