@@ -1,7 +1,7 @@
 {
   "name": "kaput-cli",
   "description": "CLI tools for Put.io",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "David Chalifoux @davidchalifoux",
   "bin": {
     "kaput": "./bin/run"
