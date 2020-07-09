@@ -6,9 +6,16 @@ const Put = require('./put-api')
 const chalk = require('chalk')
 
 async function requireAuth() {
-  await Put.User.Info()
+  await Put.Auth.ValidateToken()
+  .then(r => {
+    // Check for token validation
+    if (r.data.result === false) {
+      console.log(chalk.red('Error: You must first login to the CLI using the "login" command.'))
+      process.exit(1)
+    }
+  })
   .catch(() => {
-    console.log(chalk.red('Error: You must first login to the CLI using the "login" command.'))
+    console.log(chalk.red('Error contacting Put for token validation.'))
     process.exit(1)
   })
 }
