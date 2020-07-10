@@ -33,7 +33,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`kaput autocomplete [SHELL]`](#kaput-autocomplete-shell)
-* [`kaput config`](#kaput-config)
+* [`kaput debug`](#kaput-debug)
 * [`kaput download FILEID`](#kaput-download-fileid)
 * [`kaput files [FOLDERID]`](#kaput-files-folderid)
 * [`kaput files:delete FILEID`](#kaput-filesdelete-fileid)
@@ -75,13 +75,13 @@ EXAMPLES
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.2.0/src\commands\autocomplete\index.ts)_
 
-## `kaput config`
+## `kaput debug`
 
 Output the current config
 
 ```
 USAGE
-  $ kaput config
+  $ kaput debug
 
 DESCRIPTION
   ...
@@ -89,7 +89,7 @@ DESCRIPTION
   Warning: This will include your auth tokens.
 ```
 
-_See code: [src\commands\config.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\config.js)_
+_See code: [src\commands\debug.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\debug.js)_
 
 ## `kaput download FILEID`
 
