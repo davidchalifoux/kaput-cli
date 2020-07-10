@@ -37,6 +37,7 @@ USAGE
 * [`kaput files [FOLDERID]`](#kaput-files-folderid)
 * [`kaput files:delete FILEID`](#kaput-filesdelete-fileid)
 * [`kaput files:link FILEID`](#kaput-fileslink-fileid)
+* [`kaput files:mkdir FOLDERNAME`](#kaput-filesmkdir-foldername)
 * [`kaput files:search QUERY`](#kaput-filessearch-query)
 * [`kaput help [COMMAND]`](#kaput-help-command)
 * [`kaput login`](#kaput-login)
@@ -153,6 +154,27 @@ DESCRIPTION
 ```
 
 _See code: [src\commands\files\link.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\link.js)_
+
+## `kaput files:mkdir FOLDERNAME`
+
+Create new folder
+
+```
+USAGE
+  $ kaput files:mkdir FOLDERNAME
+
+ARGUMENTS
+  FOLDERNAME  (Name of the new folder.)
+
+OPTIONS
+  -p, --parentID=parentID  (ID of the folder to create the new folder in. Defaults to root.)
+
+DESCRIPTION
+  ...
+  Creates a new folder with the given name at the specified folder.
+```
+
+_See code: [src\commands\files\mkdir.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\mkdir.js)_
 
 ## `kaput files:search QUERY`
 
