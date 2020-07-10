@@ -32,7 +32,7 @@ class IndexCommand extends Command {
     await requireAuth()
 
     // Query Put
-    await put.Files.Query(folderID, {limit: limit})
+    await put.Files.Query(folderID, {limit: limit, contentType: flags.contentType, sort: flags.sort})
     .then(async r => {
       // Setup data
       let data = r.data.files
@@ -83,14 +83,8 @@ class IndexCommand extends Command {
 
         }
 
-        // Setup options
-        const options = {
-          sort: flags.sort,
-          filter: flags.filter,
-        }
-
         // Display table
-        cli.table(data, columns, options)
+        cli.table(data, columns)
 
         // Friendly display if there's nothing in the list
         if (data.length === 0) {
@@ -111,8 +105,8 @@ This command lists all of the files in your root folder by default.
 `
 
 IndexCommand.flags = {
-  sort: flags.string({description: '[property to sort by (prepend ' - ' for descending)]'}),
-  filter: flags.string({description: '(filter property by partial string matching, ex: name=foo)'}),
+  sort: flags.string({description: '(Property to sort by. Properties available: NAME_ASC, NAME_DESC, SIZE_ASC, SIZE_DESC, DATE_ASC, DATE_DESC, MODIFIED_ASC, MODIFIED_DESC)'}),
+  contentType: flags.string({description: '(query Put for the specified content type)'}),
   all: flags.boolean({description: '(all files of the user will be returned)'}),
   limit: flags.integer({description: '(number of items to return, if -1 is used, all files will be retreived recursively. Default is 1000.)'}),
   json: flags.boolean({description: '(output data as pure JSON instead of in a table)'}),

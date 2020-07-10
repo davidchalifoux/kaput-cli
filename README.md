@@ -99,11 +99,15 @@ ARGUMENTS
   FOLDERID  (ID of folder to display files in.)
 
 OPTIONS
-  --all            (all files of the user will be returned)
-  --filter=filter  (filter property by partial string matching, ex: name=foo)
-  --json           (output data as pure JSON instead of in a table)
-  --limit=limit    (number of items to return, if -1 is used, all files will be retreived recursively. Default is 1000.)
-  --sort=sort
+  --all                      (all files of the user will be returned)
+  --contentType=contentType  (query Put for the specified content type)
+  --json                     (output data as pure JSON instead of in a table)
+
+  --limit=limit              (number of items to return, if -1 is used, all files will be retreived recursively. Default
+                             is 1000.)
+
+  --sort=sort                (Property to sort by. Properties available: NAME_ASC, NAME_DESC, SIZE_ASC, SIZE_DESC,
+                             DATE_ASC, DATE_DESC, MODIFIED_ASC, MODIFIED_DESC)
 
 DESCRIPTION
   ...
