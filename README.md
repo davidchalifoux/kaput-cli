@@ -32,7 +32,6 @@ USAGE
 
 # Commands
 <!-- commands -->
-* [`kaput autocomplete [SHELL]`](#kaput-autocomplete-shell)
 * [`kaput debug`](#kaput-debug)
 * [`kaput download FILEID`](#kaput-download-fileid)
 * [`kaput files [FOLDERID]`](#kaput-files-folderid)
@@ -51,29 +50,6 @@ USAGE
 * [`kaput transfers:clear`](#kaput-transfersclear)
 * [`kaput transfers:retry TRANSFERID`](#kaput-transfersretry-transferid)
 * [`kaput whoami`](#kaput-whoami)
-
-## `kaput autocomplete [SHELL]`
-
-display autocomplete installation instructions
-
-```
-USAGE
-  $ kaput autocomplete [SHELL]
-
-ARGUMENTS
-  SHELL  shell type
-
-OPTIONS
-  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
-
-EXAMPLES
-  $ kaput autocomplete
-  $ kaput autocomplete bash
-  $ kaput autocomplete zsh
-  $ kaput autocomplete --refresh-cache
-```
-
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.2.0/src\commands\autocomplete\index.ts)_
 
 ## `kaput debug`
 
