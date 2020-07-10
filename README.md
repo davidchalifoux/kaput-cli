@@ -22,7 +22,7 @@ $ npm install -g kaput-cli
 $ kaput COMMAND
 running command...
 $ kaput (-v|--version|version)
-kaput-cli/0.0.1 win32-x64 node-v12.18.1
+kaput-cli/0.0.2 win32-x64 node-v12.18.1
 $ kaput --help [COMMAND]
 USAGE
   $ kaput COMMAND
@@ -42,7 +42,9 @@ USAGE
 * [`kaput help [COMMAND]`](#kaput-help-command)
 * [`kaput login`](#kaput-login)
 * [`kaput logout`](#kaput-logout)
-* [`kaput rarbg QUERY`](#kaput-rarbg-query)
+* [`kaput search KEYWORD`](#kaput-search-keyword)
+* [`kaput search:indexers`](#kaput-searchindexers)
+* [`kaput search:top`](#kaput-searchtop)
 * [`kaput transfers`](#kaput-transfers)
 * [`kaput transfers:add URL`](#kaput-transfersadd-url)
 * [`kaput transfers:cancel TRANSFERID`](#kaput-transferscancel-transferid)
@@ -87,7 +89,7 @@ DESCRIPTION
   Warning: This will include your auth tokens.
 ```
 
-_See code: [src\commands\config.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\config.js)_
+_See code: [src\commands\config.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\config.js)_
 
 ## `kaput download FILEID`
 
@@ -107,7 +109,7 @@ DESCRIPTION
   Note: The ID can be found in the URL of the file from Put.io
 ```
 
-_See code: [src\commands\download.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\download.js)_
+_See code: [src\commands\download.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\download.js)_
 
 ## `kaput files [FOLDERID]`
 
@@ -132,7 +134,7 @@ DESCRIPTION
   This command lists all of the files in your root folder by default.
 ```
 
-_See code: [src\commands\files\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\index.js)_
+_See code: [src\commands\files\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\index.js)_
 
 ## `kaput files:delete FILEID`
 
@@ -151,7 +153,7 @@ DESCRIPTION
   Note: If you don't have the trash enabled on your account, this data will be unrecoverable.
 ```
 
-_See code: [src\commands\files\delete.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\delete.js)_
+_See code: [src\commands\files\delete.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\delete.js)_
 
 ## `kaput files:link FILEID`
 
@@ -170,7 +172,7 @@ DESCRIPTION
   Note: This link will only work on the device it was generated on.
 ```
 
-_See code: [src\commands\files\link.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\link.js)_
+_See code: [src\commands\files\link.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\link.js)_
 
 ## `kaput files:search QUERY`
 
@@ -188,7 +190,7 @@ DESCRIPTION
   This command allows you search your entire account for a file.
 ```
 
-_See code: [src\commands\files\search.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\files\search.js)_
+_See code: [src\commands\files\search.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\search.js)_
 
 ## `kaput help [COMMAND]`
 
@@ -221,7 +223,7 @@ DESCRIPTION
   Note: This stores the access token locally.
 ```
 
-_See code: [src\commands\login.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\login.js)_
+_See code: [src\commands\login.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\login.js)_
 
 ## `kaput logout`
 
@@ -236,31 +238,64 @@ DESCRIPTION
   Removes your account from the CLI.
 ```
 
-_See code: [src\commands\logout.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\logout.js)_
+_See code: [src\commands\logout.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\logout.js)_
 
-## `kaput rarbg QUERY`
+## `kaput search KEYWORD`
 
-Search and add torrents from RARBG
+Search top indexers with chill
 
 ```
 USAGE
-  $ kaput rarbg QUERY
+  $ kaput search KEYWORD
 
 ARGUMENTS
-  QUERY  (Name of the content to search for)
+  KEYWORD  (Name of the content to search for)
 
 OPTIONS
-  -f, --folderID=folderID  [ID of the folder it should download to (on Put.io). Defaults to the root folder.]
+  -f, --folderID=folderID  (ID of the folder it should download to on Put. Defaults to the root folder.)
+  -i, --indexer=indexer    (ID of the indexer to search exclusively)
+  -n, --nastyResults       (If passed, chill.institute will not filter out nasty results)
 
 DESCRIPTION
   ...
-  Searches RARBG for matching content.
-  Once a torrent is selected, it is sent to Put.io as a transfer.
-  Note: The RARBG API can be finicky. If a search returns no results you can try again, or try slightly altering your 
-  search.
+  Indexer searching is kindly provided by https://chill.institute/
+  This command allows you to search top trackers to add files to your Put account.
 ```
 
-_See code: [src\commands\rarbg.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\rarbg.js)_
+_See code: [src\commands\search\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\search\index.js)_
+
+## `kaput search:indexers`
+
+List indexers
+
+```
+USAGE
+  $ kaput search:indexers
+
+DESCRIPTION
+  ...
+  Outputs a list of all available indexers that are usable for searching.
+```
+
+_See code: [src\commands\search\indexers.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\search\indexers.js)_
+
+## `kaput search:top`
+
+Get top movies from The Pirate Bay.
+
+```
+USAGE
+  $ kaput search:top
+
+OPTIONS
+  -f, --folderID=folderID  (ID of the folder it should download to on Put. Defaults to the root folder.)
+
+DESCRIPTION
+  ...
+  Returns the top movies from The Pirate Bay.
+```
+
+_See code: [src\commands\search\top.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\search\top.js)_
 
 ## `kaput transfers`
 
@@ -280,7 +315,7 @@ DESCRIPTION
   Lists current transfers on the account.
 ```
 
-_See code: [src\commands\transfers\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\index.js)_
+_See code: [src\commands\transfers\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\index.js)_
 
 ## `kaput transfers:add URL`
 
@@ -301,7 +336,7 @@ DESCRIPTION
   Takes a URL or Magnet as an argument and sends it to Put to download.
 ```
 
-_See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\add.js)_
+_See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\add.js)_
 
 ## `kaput transfers:cancel TRANSFERID`
 
@@ -319,7 +354,7 @@ DESCRIPTION
   If transfer is in seeding state, stops seeding. Else, removes transfer entry. Does not remove their files.
 ```
 
-_See code: [src\commands\transfers\cancel.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\cancel.js)_
+_See code: [src\commands\transfers\cancel.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\cancel.js)_
 
 ## `kaput transfers:clear`
 
@@ -335,7 +370,7 @@ DESCRIPTION
   Note: No data will be removed.
 ```
 
-_See code: [src\commands\transfers\clear.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\clear.js)_
+_See code: [src\commands\transfers\clear.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\clear.js)_
 
 ## `kaput transfers:retry TRANSFERID`
 
@@ -353,7 +388,7 @@ DESCRIPTION
   Tells Put.io to try a transfer again.
 ```
 
-_See code: [src\commands\transfers\retry.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\transfers\retry.js)_
+_See code: [src\commands\transfers\retry.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\retry.js)_
 
 ## `kaput whoami`
 
@@ -368,5 +403,5 @@ DESCRIPTION
   Checks Put.io for the username of the account currently authenticated with the CLI.
 ```
 
-_See code: [src\commands\whoami.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.1/src\commands\whoami.js)_
+_See code: [src\commands\whoami.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\whoami.js)_
 <!-- commandsstop -->
