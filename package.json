@@ -53,8 +53,7 @@
     "commands": "./src/commands",
     "bin": "kaput",
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-autocomplete"
+      "@oclif/plugin-help"
     ]
   },
   "repository": "davidchalifoux/kaput-cli",
