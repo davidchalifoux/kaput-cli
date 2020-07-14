@@ -7,8 +7,13 @@ class LogoutCommand extends Command {
     const {flags} = this.parse(LogoutCommand)
     const profileName = flags.profile || 'default'
 
-    config.delete(profileName)
-    this.log(chalk.yellow('Account removed from the CLI.'))
+    if (config.has(profileName)) {
+      // Profile exists
+      config.delete(profileName)
+      this.log(chalk.yellow('Account removed from the CLI.'))
+    } else {
+      this.log(chalk.yellow(profileName, 'account does not exist. Cannot remove.'))
+    }
   }
 }
 

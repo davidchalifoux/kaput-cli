@@ -24,8 +24,15 @@ async function requireAuth(profileName = 'default') {
     Put.setToken(authtoken)
   } else {
     // Auth token not provided and profile does not exist
-    console.log(chalk.red('Profile', '"' + profileName + '"', 'does not exist.'))
-    process.exit(1)
+    // eslint-disable-next-line no-lonely-if
+    if (profileName === 'default') {
+      console.log(chalk.red('Error: You must first login to the CLI using the "login" command.'))
+      console.log('Note: Default profile does not exist and a different profile was not provided.')
+      process.exit(1)
+    } else {
+      console.log(chalk.red('Profile', '"' + profileName + '"', 'does not exist.'))
+      process.exit(1)
+    }
   }
 
   await Put.Auth.ValidateToken()
