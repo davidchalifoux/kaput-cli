@@ -21,7 +21,7 @@ class IndexCommand extends Command {
     const nastyResults = !flags.nastyResults
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     // Search
     let searchResults = []
@@ -88,21 +88,22 @@ This command allows you to search top trackers to add files to your Put account.
 `
 
 IndexCommand.flags = {
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
   folderID: flags.string({
     char: 'f',
     description:
-      '(ID of the folder it should download to on Put. Defaults to the root folder.)',
+      'ID of the folder it should download to on Put. Defaults to the root folder.',
   }),
   indexer: flags.string({
     char: 'i',
     description:
-      '(ID of the indexer to search exclusively)',
+      'ID of the indexer to search exclusively.',
   }),
   nastyResults: flags.boolean({
     char: 'n',
     default: false,
     description:
-      '(If passed, chill.institute will not filter out nasty results)',
+      'If passed, chill.institute will not filter out nasty results.',
   }),
 }
 
@@ -110,7 +111,7 @@ IndexCommand.args = [
   {
     name: 'keyword',
     required: true,
-    description: '(Name of the content to search for)',
+    description: 'Name of the content to search for.',
   },
 ]
 

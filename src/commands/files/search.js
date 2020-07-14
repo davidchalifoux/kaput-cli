@@ -12,10 +12,12 @@ const moment = require('moment')
 class SearchCommand extends Command {
   async run() {
     const {argv} = this.parse(SearchCommand)
+    const {flags} = this.parse(SearchCommand)
+
     const query = argv[0]
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     // Query Put
     await put.Files.Search(query)
@@ -45,14 +47,8 @@ class SearchCommand extends Command {
 
       }
 
-      // Setup options
-      const options = {
-        sort: flags.sort,
-        filter: flags.filter,
-      }
-
       // Display table
-      cli.table(data, columns, options)
+      cli.table(data, columns)
 
       // Friendly display if there's nothing in the list
       if (data.length === 0) {
@@ -71,11 +67,15 @@ SearchCommand.description = `Search for a file
 This command allows you search your entire account for a file.
 `
 
+SearchCommand.flags = {
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
+}
+
 SearchCommand.args = [
   {
     name: 'query',
     required: true,
-    description: '(Name of item to search for)',
+    description: 'Name of item to search for.',
   },
 ]
 

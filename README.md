@@ -22,7 +22,7 @@ $ npm install -g kaput-cli
 $ kaput COMMAND
 running command...
 $ kaput (-v|--version|version)
-kaput-cli/0.0.2 win32-x64 node-v12.18.1
+kaput-cli/0.1.0 win32-x64 node-v12.18.1
 $ kaput --help [COMMAND]
 USAGE
   $ kaput COMMAND
@@ -66,7 +66,7 @@ DESCRIPTION
   Warning: This will include your auth tokens.
 ```
 
-_See code: [src\commands\debug.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\debug.js)_
+_See code: [src\commands\debug.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\debug.js)_
 
 ## `kaput download FILEID`
 
@@ -77,7 +77,10 @@ USAGE
   $ kaput download FILEID
 
 ARGUMENTS
-  FILEID  (ID of the file to download)
+  FILEID  ID of the file to download.
+
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
@@ -86,7 +89,7 @@ DESCRIPTION
   Note: The ID can be found in the URL of the file from Put.io
 ```
 
-_See code: [src\commands\download.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\download.js)_
+_See code: [src\commands\download.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\download.js)_
 
 ## `kaput files [FOLDERID]`
 
@@ -97,25 +100,28 @@ USAGE
   $ kaput files [FOLDERID]
 
 ARGUMENTS
-  FOLDERID  (ID of folder to display files in.)
+  FOLDERID  ID of folder to display files in.
 
 OPTIONS
-  --all                      (all files of the user will be returned)
-  --contentType=contentType  (query Put for the specified content type)
-  --json                     (output data as pure JSON instead of in a table)
+  --all                      All files of the user will be returned.
+  --contentType=contentType  Query Put for the specified content type.
+  --fileType=fileType        Query Put for the specified file type.
+  --json                     Output data as pure JSON instead of in a table.
 
-  --limit=limit              (number of items to return, if -1 is used, all files will be retreived recursively. Default
-                             is 1000.)
+  --limit=limit              Number of items to return, if -1 is used, all files will be retreived recursively. Default
+                             is 1000.
 
-  --sort=sort                (Property to sort by. Properties available: NAME_ASC, NAME_DESC, SIZE_ASC, SIZE_DESC,
-                             DATE_ASC, DATE_DESC, MODIFIED_ASC, MODIFIED_DESC)
+  --profile=profile          Name of the profile to use for authentication. Defaults to the "default" profile.
+
+  --sort=sort                Property to sort by. Properties available: NAME_ASC, NAME_DESC, SIZE_ASC, SIZE_DESC,
+                             DATE_ASC, DATE_DESC, MODIFIED_ASC, MODIFIED_DESC.
 
 DESCRIPTION
   ...
   This command lists all of the files in your root folder by default.
 ```
 
-_See code: [src\commands\files\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\index.js)_
+_See code: [src\commands\files\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\files\index.js)_
 
 ## `kaput files:delete FILEID`
 
@@ -126,7 +132,10 @@ USAGE
   $ kaput files:delete FILEID
 
 ARGUMENTS
-  FILEID  (ID of the file to delete)
+  FILEID  ID of the file to delete.
+
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
@@ -134,7 +143,7 @@ DESCRIPTION
   Note: If you don't have the trash enabled on your account, this data will be unrecoverable.
 ```
 
-_See code: [src\commands\files\delete.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\delete.js)_
+_See code: [src\commands\files\delete.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\files\delete.js)_
 
 ## `kaput files:link FILEID`
 
@@ -145,7 +154,10 @@ USAGE
   $ kaput files:link FILEID
 
 ARGUMENTS
-  FILEID  (ID of the file to generate a link for)
+  FILEID  ID of the file to generate a link for.
+
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
@@ -153,7 +165,7 @@ DESCRIPTION
   Note: This link will only work on the device it was generated on.
 ```
 
-_See code: [src\commands\files\link.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\link.js)_
+_See code: [src\commands\files\link.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\files\link.js)_
 
 ## `kaput files:mkdir FOLDERNAME`
 
@@ -164,17 +176,18 @@ USAGE
   $ kaput files:mkdir FOLDERNAME
 
 ARGUMENTS
-  FOLDERNAME  (Name of the new folder.)
+  FOLDERNAME  Name of the new folder.
 
 OPTIONS
-  -p, --parentID=parentID  (ID of the folder to create the new folder in. Defaults to root.)
+  -p, --parentID=parentID  ID of the folder to create the new folder in. Defaults to root.
+  --profile=profile        Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
   Creates a new folder with the given name at the specified folder.
 ```
 
-_See code: [src\commands\files\mkdir.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\mkdir.js)_
+_See code: [src\commands\files\mkdir.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\files\mkdir.js)_
 
 ## `kaput files:search QUERY`
 
@@ -185,14 +198,17 @@ USAGE
   $ kaput files:search QUERY
 
 ARGUMENTS
-  QUERY  (Name of item to search for)
+  QUERY  Name of item to search for.
+
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
   This command allows you search your entire account for a file.
 ```
 
-_See code: [src\commands\files\search.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\files\search.js)_
+_See code: [src\commands\files\search.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\files\search.js)_
 
 ## `kaput help [COMMAND]`
 
@@ -219,13 +235,24 @@ Login to Put.io
 USAGE
   $ kaput login
 
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
+
 DESCRIPTION
   ...
   Authenticates the CLI with your Put.io account.
+
+  Providing a name to the profile flag allows you to save multiple accounts to Kaput for later use.
+
+  The environment variables PUTIO_PROFILE and PUTIO_TOKEN are also available so that you can switch accounts quickly and 
+  without having the token stored locally in a file.
+  Setting the environment variable PUTIO_PROFILE tells Kaput which saved profile to use.
+  Setting the environment variable PUTIO_TOKEN directly gives Kaput a Put auth token to use.
+  These variables do not neeed to be used together. It is recommended to set one or the other.
   Note: This stores the access token locally.
 ```
 
-_See code: [src\commands\login.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\login.js)_
+_See code: [src\commands\login.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\login.js)_
 
 ## `kaput logout`
 
@@ -235,12 +262,15 @@ Logout from Put
 USAGE
   $ kaput logout
 
+OPTIONS
+  --profile=profile  Name of the profile to remove. Defaults to the "default" profile.
+
 DESCRIPTION
   ...
   Removes your account from the CLI.
 ```
 
-_See code: [src\commands\logout.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\logout.js)_
+_See code: [src\commands\logout.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\logout.js)_
 
 ## `kaput search KEYWORD`
 
@@ -251,12 +281,13 @@ USAGE
   $ kaput search KEYWORD
 
 ARGUMENTS
-  KEYWORD  (Name of the content to search for)
+  KEYWORD  Name of the content to search for.
 
 OPTIONS
-  -f, --folderID=folderID  (ID of the folder it should download to on Put. Defaults to the root folder.)
-  -i, --indexer=indexer    (ID of the indexer to search exclusively)
-  -n, --nastyResults       (If passed, chill.institute will not filter out nasty results)
+  -f, --folderID=folderID  ID of the folder it should download to on Put. Defaults to the root folder.
+  -i, --indexer=indexer    ID of the indexer to search exclusively.
+  -n, --nastyResults       If passed, chill.institute will not filter out nasty results.
+  --profile=profile        Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
@@ -264,7 +295,7 @@ DESCRIPTION
   This command allows you to search top trackers to add files to your Put account.
 ```
 
-_See code: [src\commands\search\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\search\index.js)_
+_See code: [src\commands\search\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\search\index.js)_
 
 ## `kaput search:indexers`
 
@@ -279,7 +310,7 @@ DESCRIPTION
   Outputs a list of all available indexers that are usable for searching.
 ```
 
-_See code: [src\commands\search\indexers.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\search\indexers.js)_
+_See code: [src\commands\search\indexers.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\search\indexers.js)_
 
 ## `kaput search:top`
 
@@ -290,14 +321,15 @@ USAGE
   $ kaput search:top
 
 OPTIONS
-  -f, --folderID=folderID  (ID of the folder it should download to on Put. Defaults to the root folder.)
+  -f, --folderID=folderID  ID of the folder it should download to on Put. Defaults to the root folder.
+  --profile=profile        Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
   Returns the top movies from The Pirate Bay.
 ```
 
-_See code: [src\commands\search\top.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\search\top.js)_
+_See code: [src\commands\search\top.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\search\top.js)_
 
 ## `kaput transfers`
 
@@ -308,16 +340,15 @@ USAGE
   $ kaput transfers
 
 OPTIONS
-  --filter=filter  (filter property by partial string matching, ex: name=foo)
-  --json           (output data as pure JSON instead of in a table)
-  --sort=sort
+  --json             Output data as pure JSON instead of in a table.
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
   Lists current transfers on the account.
 ```
 
-_See code: [src\commands\transfers\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\index.js)_
+_See code: [src\commands\transfers\index.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\transfers\index.js)_
 
 ## `kaput transfers:add URL`
 
@@ -328,17 +359,18 @@ USAGE
   $ kaput transfers:add URL
 
 ARGUMENTS
-  URL  (URL of the file to download)
+  URL  URL of the file to download.
 
 OPTIONS
-  -f, --folderID=folderID  (Folder ID to download into. Defaults to root.)
+  -f, --folderID=folderID  Folder ID to download into. Defaults to root.
+  --profile=profile        Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
   Takes a URL or Magnet as an argument and sends it to Put to download.
 ```
 
-_See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\add.js)_
+_See code: [src\commands\transfers\add.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\transfers\add.js)_
 
 ## `kaput transfers:cancel TRANSFERID`
 
@@ -349,14 +381,17 @@ USAGE
   $ kaput transfers:cancel TRANSFERID
 
 ARGUMENTS
-  TRANSFERID  (ID of the transfer to cancel)
+  TRANSFERID  ID of the transfer to cancel.
+
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
   If transfer is in seeding state, stops seeding. Else, removes transfer entry. Does not remove their files.
 ```
 
-_See code: [src\commands\transfers\cancel.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\cancel.js)_
+_See code: [src\commands\transfers\cancel.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\transfers\cancel.js)_
 
 ## `kaput transfers:clear`
 
@@ -366,13 +401,16 @@ Clear transfer list
 USAGE
   $ kaput transfers:clear
 
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
+
 DESCRIPTION
   ...
   This command clears all completed items from the tranfers list.
   Note: No data will be removed.
 ```
 
-_See code: [src\commands\transfers\clear.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\clear.js)_
+_See code: [src\commands\transfers\clear.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\transfers\clear.js)_
 
 ## `kaput transfers:retry TRANSFERID`
 
@@ -383,14 +421,17 @@ USAGE
   $ kaput transfers:retry TRANSFERID
 
 ARGUMENTS
-  TRANSFERID  (ID of the transfer to retry)
+  TRANSFERID  ID of the transfer to retry.
+
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
 
 DESCRIPTION
   ...
   Tells Put.io to try a transfer again.
 ```
 
-_See code: [src\commands\transfers\retry.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\transfers\retry.js)_
+_See code: [src\commands\transfers\retry.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\transfers\retry.js)_
 
 ## `kaput whoami`
 
@@ -400,10 +441,13 @@ Display your username
 USAGE
   $ kaput whoami
 
+OPTIONS
+  --profile=profile  Name of the profile to use for authentication. Defaults to the "default" profile.
+
 DESCRIPTION
   ...
   Checks Put.io for the username of the account currently authenticated with the CLI.
 ```
 
-_See code: [src\commands\whoami.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.0.2/src\commands\whoami.js)_
+_See code: [src\commands\whoami.js](https://github.com/davidchalifoux/kaput-cli/blob/v0.1.0/src\commands\whoami.js)_
 <!-- commandsstop -->

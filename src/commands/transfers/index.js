@@ -12,7 +12,7 @@ class IndexCommand extends Command {
     const {flags} = this.parse(IndexCommand)
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     // Query Put
     await put.Transfers.Query()
@@ -39,14 +39,8 @@ class IndexCommand extends Command {
           },
         }
 
-        // Setup options
-        const options = {
-          sort: flags.sort,
-          filter: flags.filter,
-        }
-
         // Display table
-        cli.table(data, columns, options)
+        cli.table(data, columns)
 
         // Friendly display if there's nothing in the list
         if (data.length === 0) {
@@ -67,9 +61,8 @@ Lists current transfers on the account.
 `
 
 IndexCommand.flags = {
-  sort: flags.string({description: '(property to sort by [prepend ' - ' for descending])'}),
-  filter: flags.string({description: '(filter property by partial string matching, ex: name=foo)'}),
-  json: flags.boolean({description: '(output data as pure JSON instead of in a table)'}),
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
+  json: flags.boolean({description: 'Output data as pure JSON instead of in a table.'}),
 }
 
 module.exports = IndexCommand

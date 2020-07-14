@@ -17,7 +17,7 @@ class TopCommand extends Command {
     const folderID = flags.folderID || 0
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     // Search
     let searchResults = []
@@ -72,10 +72,11 @@ class TopCommand extends Command {
 }
 
 TopCommand.flags = {
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
   folderID: flags.string({
     char: 'f',
     description:
-      '(ID of the folder it should download to on Put. Defaults to the root folder.)',
+      'ID of the folder it should download to on Put. Defaults to the root folder.',
   }),
 }
 

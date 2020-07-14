@@ -17,7 +17,7 @@ class AddCommand extends Command {
     const folderID = flags.folderID || 0
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     // Send to put
     cli.action.start('Sending to Put')
@@ -39,14 +39,15 @@ Takes a URL or Magnet as an argument and sends it to Put to download.
 `
 
 AddCommand.flags = {
-  folderID: flags.string({char: 'f', description: '(Folder ID to download into. Defaults to root.)'}),
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
+  folderID: flags.string({char: 'f', description: 'Folder ID to download into. Defaults to root.'}),
 }
 
 AddCommand.args = [
   {
     name: 'URL',
     required: true,
-    description: '(URL of the file to download)',
+    description: 'URL of the file to download.',
   },
 ]
 

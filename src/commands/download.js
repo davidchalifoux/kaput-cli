@@ -2,7 +2,7 @@
 /* eslint-disable no-process-exit */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable new-cap */
-const {Command} = require('@oclif/command')
+const {Command, flags} = require('@oclif/command')
 const {cli} = require('cli-ux')
 const put = require('../put-api')
 const requireAuth = require('../require-auth')
@@ -12,6 +12,7 @@ const {DownloaderHelper} = require('node-downloader-helper')
 
 class DownloadCommand extends Command {
   async run() {
+    const {flags} = this.parse(DownloadCommand)
     const {argv} = this.parse(DownloadCommand)
     const fileID = argv[0]
     let fileType = null
@@ -19,17 +20,17 @@ class DownloadCommand extends Command {
     let fileName = null
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     // Get the file's info
     cli.action.start('Gathering file info')
-    await put.File.Get(fileID)
+    await put.Files.Query(fileID)
     .then(r => {
-      fileType = r.data.file.file_type
-      fileName = r.data.file.name
+      fileType = r.data.parent.file_type
+      fileName = r.data.parent.name
     })
     .catch(error => {
-      this.log(chalk.red('Error:', error.data.error_message))
+      this.log(chalk.red('Error:', error))
       process.exit(1)
     })
 
@@ -118,12 +119,19 @@ class DownloadCommand extends Command {
       progressBar.stop()
       this.log('File already downloaded.')
     })
+    dl.on('error', () => {
+      progressBar.stop()
+      this.log('')
+    })
     dl.on('end', () => {
       progressBar.stop()
       this.log('')
       this.log('Download finished.')
     })
     dl.start()
+    .catch(error => {
+      this.log(chalk.red(error))
+    })
   }
 }
 
@@ -134,11 +142,15 @@ If a folder ID is given, a zip is created and that is downloaded instead.
 Note: The ID can be found in the URL of the file from Put.io
 `
 
+DownloadCommand.flags = {
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
+}
+
 DownloadCommand.args = [
   {
     name: 'fileID',
     required: true,
-    description: '(ID of the file to download)',
+    description: 'ID of the file to download.',
   },
 ]
 

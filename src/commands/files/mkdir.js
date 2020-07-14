@@ -11,7 +11,7 @@ class MkdirCommand extends Command {
     const folderName = argv[0]
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     await put.Files.CreateFolder({parentId: flags.parentID, name: folderName})
     .then(() => {
@@ -29,13 +29,14 @@ Creates a new folder with the given name at the specified folder.
 `
 
 MkdirCommand.flags = {
-  parentID: flags.string({char: 'p', default: 0, description: '(ID of the folder to create the new folder in. Defaults to root.)'}),
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
+  parentID: flags.string({char: 'p', default: 0, description: 'ID of the folder to create the new folder in. Defaults to root.'}),
 }
 
 MkdirCommand.args = [
   {
     name: 'folderName',
-    description: '(Name of the new folder.)',
+    description: 'Name of the new folder.',
     required: true,
   },
 ]

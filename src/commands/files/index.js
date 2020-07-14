@@ -29,10 +29,10 @@ class IndexCommand extends Command {
     }
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     // Query Put
-    await put.Files.Query(folderID, {limit: limit, contentType: flags.contentType, sort: flags.sort})
+    await put.Files.Query(folderID, {limit: limit, fileType: flags.fileType, contentType: flags.contentType, sort: flags.sort})
     .then(async r => {
       // Setup data
       let data = r.data.files
@@ -105,17 +105,19 @@ This command lists all of the files in your root folder by default.
 `
 
 IndexCommand.flags = {
-  sort: flags.string({description: '(Property to sort by. Properties available: NAME_ASC, NAME_DESC, SIZE_ASC, SIZE_DESC, DATE_ASC, DATE_DESC, MODIFIED_ASC, MODIFIED_DESC)'}),
-  contentType: flags.string({description: '(query Put for the specified content type)'}),
-  all: flags.boolean({description: '(all files of the user will be returned)'}),
-  limit: flags.integer({description: '(number of items to return, if -1 is used, all files will be retreived recursively. Default is 1000.)'}),
-  json: flags.boolean({description: '(output data as pure JSON instead of in a table)'}),
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
+  sort: flags.string({description: 'Property to sort by. Properties available: NAME_ASC, NAME_DESC, SIZE_ASC, SIZE_DESC, DATE_ASC, DATE_DESC, MODIFIED_ASC, MODIFIED_DESC.'}),
+  contentType: flags.string({description: 'Query Put for the specified content type.'}),
+  fileType: flags.string({description: 'Query Put for the specified file type.'}),
+  all: flags.boolean({description: 'All files of the user will be returned.'}),
+  limit: flags.integer({description: 'Number of items to return, if -1 is used, all files will be retreived recursively. Default is 1000.'}),
+  json: flags.boolean({description: 'Output data as pure JSON instead of in a table.'}),
 }
 
 IndexCommand.args = [
   {
     name: 'folderID',
-    description: '(ID of folder to display files in.)',
+    description: 'ID of folder to display files in.',
   },
 ]
 

@@ -4,8 +4,30 @@
 /* eslint-disable new-cap */
 const Put = require('./put-api')
 const chalk = require('chalk')
+const config = require('./config')
 
-async function requireAuth() {
+async function requireAuth(profileName = 'default') {
+  // Check for env var for profile name
+  if (process.env.PUTIO_PROFILE) {
+    profileName = process.env.PUTIO_PROFILE
+  }
+
+  // Check for env var auth token
+  const authtoken = process.env.PUTIO_TOKEN
+
+  // Check for profile
+  if (config.has(profileName + '.authToken')) {
+    // Profile exists
+    Put.setToken(config.get(profileName + '.authToken'))
+  } else if (authtoken) {
+    // Profile does not exist, check for token
+    Put.setToken(authtoken)
+  } else {
+    // Auth token not provided and profile does not exist
+    console.log(chalk.red('Profile', '"' + profileName + '"', 'does not exist.'))
+    process.exit(1)
+  }
+
   await Put.Auth.ValidateToken()
   .then(r => {
     // Check for token validation

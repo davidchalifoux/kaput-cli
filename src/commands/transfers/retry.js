@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-process-exit */
 /* eslint-disable no-process-exit */
 /* eslint-disable new-cap */
-const {Command} = require('@oclif/command')
+const {Command, flags} = require('@oclif/command')
 const {cli} = require('cli-ux')
 const put = require('../../put-api')
 const requireAuth = require('../../require-auth')
@@ -10,10 +10,12 @@ const chalk = require('chalk')
 class RetryCommand extends Command {
   async run() {
     const {argv} = this.parse(RetryCommand)
+    const {flags} = this.parse(RetryCommand)
+
     let transferID = argv[0]
 
     // Check for auth
-    await requireAuth()
+    await requireAuth(flags.profile)
 
     // Confirm transfer ID
     while (!transferID) {
@@ -45,8 +47,12 @@ RetryCommand.args = [
   {
     name: 'TransferID',
     required: true,
-    description: '(ID of the transfer to retry)',
+    description: 'ID of the transfer to retry.',
   },
 ]
+
+RetryCommand.flags = {
+  profile: flags.string({description: 'Name of the profile to use for authentication. Defaults to the "default" profile.'}),
+}
 
 module.exports = RetryCommand

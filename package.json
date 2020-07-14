@@ -1,7 +1,7 @@
 {
   "name": "kaput-cli",
   "description": "CLI tools for Put.io",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "author": "David Chalifoux @davidchalifoux",
   "bin": {
     "kaput": "./bin/run"
@@ -11,7 +11,7 @@
     "@oclif/command": "^1.7.0",
     "@oclif/config": "^1.16.0",
     "@oclif/plugin-help": "^3.1.0",
-    "@putdotio/api-client": "^7.10.1",
+    "@putdotio/api-client": "^8.6.1",
     "axios": "^0.19.2",
     "chalk": "^4.1.0",
     "cli-ux": "^5.4.9",
@@ -45,7 +45,8 @@
     "oclif",
     "put",
     "put.io",
-    "kaput"
+    "kaput",
+    "CLI"
   ],
   "license": "MIT",
   "main": "src/index.js",
