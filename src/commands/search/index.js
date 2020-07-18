@@ -27,8 +27,9 @@ class IndexCommand extends Command {
     let searchResults = []
     cli.action.start('Searching chill.institute')
 
-    await axios.get('https://us-central1-kaput-services.cloudfunctions.net/search', {
+    await axios.get('https://us-central1-kaput-services.cloudfunctions.net/searchV2', {
       params: {
+        token: put.token,
         keyword: keyword,
         indexer: indexer,
         filterNastyResults: nastyResults,

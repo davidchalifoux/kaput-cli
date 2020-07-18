@@ -23,7 +23,11 @@ class TopCommand extends Command {
     let searchResults = []
     cli.action.start('Searching chill.institute')
 
-    await axios.get('https://us-central1-kaput-services.cloudfunctions.net/topMovies')
+    await axios.get('https://us-central1-kaput-services.cloudfunctions.net/topMoviesV2', {
+      params: {
+        token: put.token,
+      },
+    })
     .then(response => {
       response.data.forEach(element => {
         searchResults.push({name: element.title + ' | ' + chalk.green(formatBytes(element.size)) + ' | ' + moment.utc(element.upload_time).fromNow(), value: element.link})
