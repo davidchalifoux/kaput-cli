@@ -1,4 +1,4 @@
-![Logo](https://github.com/davidchalifoux/kaput-cli/blob/master/GitHub-logo.png)
+![Logo](https://github.com/davidchalifoux/kaput-cli/blob/master/GitHub-header.png)
 
 Kaput-CLI
 =========
