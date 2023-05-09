@@ -8,8 +8,8 @@ description = "The unofficial CLI for Put.io"
 readme = "README.md"
 homepage = "https://github.com/davidchalifoux/kaput-cli"
 repository = "https://github.com/davidchalifoux/kaput-cli"
-keywords = ["cli", "put.io", "kaput", "upload", "download"]
-categories = ["Command line utilities"]
+keywords = ["cli", "putio", "kaput", "upload", "download"]
+categories = ["command-line-utilities"]
 exclude = [
 	".gitignore",
 	".github/*"

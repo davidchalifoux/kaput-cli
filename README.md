@@ -1,8 +1,11 @@
+![cover image](https://github.com/davidchalifoux/kaput-cli/blob/main/cover.png?raw=true)
+
 # Kaput-CLI
 
 The unofficial CLI for [Put.io](https://put.io)
 
 [![License](https://img.shields.io/github/license/davidchalifoux/kaput-cli.svg)](https://github.com/davidchalifoux/kaput-cli/blob/main/LICENSE)
+[![Crates.io](https://img.shields.io/crates/v/kaput-cli)](https://crates.io/crates/kaput-cli)
 
 - [Features](#features)
 - [Installation](#installation)
