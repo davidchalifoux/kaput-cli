@@ -1,3 +1,5 @@
+![cover image](https://github.com/davidchalifoux/kaput-cli/blob/main/cover.png?raw=true)
+
 # Kaput-CLI
 
 The unofficial CLI for [Put.io](https://put.io)
