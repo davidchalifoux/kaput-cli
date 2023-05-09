@@ -9,7 +9,11 @@ readme = "README.md"
 homepage = "https://github.com/davidchalifoux/kaput-cli"
 repository = "https://github.com/davidchalifoux/kaput-cli"
 keywords = ["cli", "put.io", "kaput", "upload", "download"]
-categories = ["command-line-utilities"]
+categories = ["Command line utilities"]
+exclude = [
+	".gitignore",
+	".github/*"
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
