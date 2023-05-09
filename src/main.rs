@@ -128,7 +128,7 @@ fn cli() -> Command {
                         .about("Extract ZIP and RAR archives")
                         .long_about("Extracts ZIP and RAR archives.")
                         .arg_required_else_help(true)
-                        .arg(arg!(<FILE_ID> "ID(s) of the file(s) to move (required)")),
+                        .arg(arg!(<FILE_ID> "ID(s) of the file(s) to extract (required)")),
                 ),
         )
         .subcommand(
