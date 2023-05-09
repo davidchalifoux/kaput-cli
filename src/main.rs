@@ -35,7 +35,7 @@ fn require_auth(config: &ConfigFile) -> put::account::AccountResponse {
 }
 
 fn cli() -> Command {
-    Command::new("kaput-cli")
+    Command::new("kaput")
         .about("The unofficial CLI for Put.io")
         .subcommand_required(true)
         .arg_required_else_help(true)
