@@ -1,10 +1,1 @@
-*-debug.log
-*-error.log
-.DS_Store
-/.nyc_output
-/dist
-/tmp
-/yarn.lock
-node_modules
-.env
-oclif.manifest.json
+/target
