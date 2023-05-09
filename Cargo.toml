@@ -9,7 +9,7 @@ readme = "README.md"
 homepage = "https://github.com/davidchalifoux/kaput-cli"
 repository = "https://github.com/davidchalifoux/kaput-cli"
 keywords = ["cli", "putio", "kaput", "upload", "download"]
-categories = ["Command line utilities"]
+categories = ["command-line-utilities"]
 exclude = [
 	".gitignore",
 	".github/*"
