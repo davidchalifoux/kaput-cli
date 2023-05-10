@@ -33,8 +33,24 @@ You can use Kaput to _completely_ manage your [Put.io](https://put.io) account f
 
 # Installation
 
-Coming soon.
+Please refer to our [documentation](https://docs.kaput.sh/info/installation) for information specific to your platform.
+
+### Manual Installation
+
+You can manually install Kaput as long as you have `Rust` and `Cargo` installed on your machine.
+
+1. Install Rust and Cargo
+
+```shell
+curl https://sh.rustup.rs -sSf | sh
+```
+
+2. Install Kaput through Cargo
+
+```shell
+cargo install kaput-cli
+```
 
 # Documentation
 
-Please refer to [our docs](https://docs.kaput.sh/info/get-started) for information on each command.
+Please refer to our [documentation](https://docs.kaput.sh/info/get-started) for information on each command.
