@@ -1,13 +1,28 @@
 use reqwest::blocking::multipart;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use tabled::Tabled;
+
+// Handles potentially null fields
+// Source: https://github.com/graphql-rust/juniper/issues/735#issue-677782243
+fn unwrap_or_default<'de, D, T>(deserializer: D) -> Result<T, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de> + Default,
+{
+    Ok(Option::<T>::deserialize(deserializer)?.unwrap_or_default())
+}
 
 #[derive(Debug, Serialize, Deserialize, Tabled)]
 pub struct Transfer {
+    #[serde(default, deserialize_with = "unwrap_or_default")]
     pub id: u32,
+    #[serde(default, deserialize_with = "unwrap_or_default")]
     pub file_id: u32,
+    #[serde(default, deserialize_with = "unwrap_or_default")]
     pub name: String,
+    #[serde(default, deserialize_with = "unwrap_or_default")]
     pub status: String,
+    #[serde(default, deserialize_with = "unwrap_or_default")]
     pub percent_done: u16,
 }
 
