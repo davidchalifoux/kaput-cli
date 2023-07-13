@@ -40,7 +40,7 @@ pub fn create(api_token: String, file_id: u32) -> Result<String, Box<dyn std::er
 pub struct CheckZipResponse {
     pub zip_status: String,
     pub url: String,
-    pub size: i32,
+    pub size: u64,
 }
 
 /// Checks the status of a given zip job
