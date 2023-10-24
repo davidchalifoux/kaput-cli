@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::{Command as ProcessCommand, Stdio};
 use std::{thread, time};
-use tabled::{Style, Table};
+use tabled::{settings::Style, Table};
 
 mod put;
 
