@@ -1,4 +1,4 @@
-use clap::{arg, Command};
+use clap::{arg, Arg, Command};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::{Command as ProcessCommand, Stdio};
@@ -97,6 +97,11 @@ fn cli() -> Command {
                         .about("Upload file(s) to your account")
                         .long_about("Uploads file(s) to your account.")
                         .arg_required_else_help(true)
+                        .arg(
+                                Arg::new("parent")
+                                .short('p')
+                                .help("ID of a Put folder to upload to")
+                            )
                         .arg(
                             arg!(<PATH> ... "Valid paths of files to upload")
                                 .value_parser(clap::value_parser!(PathBuf)),
