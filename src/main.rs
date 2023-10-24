@@ -98,9 +98,14 @@ fn cli() -> Command {
                         .long_about("Uploads file(s) to your account.")
                         .arg_required_else_help(true)
                         .arg(
-                                Arg::new("parent")
+                                Arg::new("parent_id")
                                 .short('p')
-                                .help("ID of a Put folder to upload to")
+                                .help("ID of a Put folder to upload to instead of the root folder")
+                            )
+                            .arg(
+                                Arg::new("filename")
+                                .short('n')
+                                .help("Override file name")
                             )
                         .arg(
                             arg!(<PATH> ... "Valid paths of files to upload")
@@ -388,6 +393,10 @@ fn main() {
             Some(("upload", sub_matches)) => {
                 require_auth(&config);
 
+                let parent_id = sub_matches.get_one::<String>("parent_id");
+
+                let filename = sub_matches.get_one::<String>("filename");
+
                 let paths = sub_matches
                     .get_many::<PathBuf>("PATH")
                     .into_iter()
@@ -400,6 +409,16 @@ fn main() {
                         .arg(format!("Authorization: Bearer {}", config.api_token))
                         .arg("-F")
                         .arg(format!("file=@{}", path.to_string_lossy()))
+                        .arg("-F")
+                        .arg(format!(
+                            "filename={}",
+                            filename.clone().unwrap_or(&"".to_string())
+                        ))
+                        .arg("-F")
+                        .arg(format!(
+                            "parent_id={}",
+                            parent_id.unwrap_or(&"0".to_string())
+                        ))
                         .arg("https://upload.put.io/v2/files/upload")
                         .stdout(Stdio::piped())
                         .spawn()
