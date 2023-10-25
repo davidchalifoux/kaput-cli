@@ -333,7 +333,7 @@ fn main() {
                     .expect("missing query argument");
                 let files = put::files::search(config.api_token, query.to_string())
                     .expect("querying files");
-                let table = Table::new(&files.files).with(Style::markdown()).to_string();
+                let table = Table::new(files.files).with(Style::markdown()).to_string();
                 println!("\n# Results for `{}`\n", &query);
                 println!("{}\n", table);
             }
@@ -413,7 +413,7 @@ fn main() {
 
                 let mut curl_args: Vec<String> = vec![];
 
-                if *is_silent.unwrap_or(&false) == true {
+                if *is_silent.unwrap_or(&false) {
                     // Run CURL in silent mode
                     curl_args.push("-s".to_string());
                 }
@@ -433,10 +433,7 @@ fn main() {
                         .arg("-F")
                         .arg(format!("file=@{}", path.to_string_lossy()))
                         .arg("-F")
-                        .arg(format!(
-                            "filename={}",
-                            file_name.clone().unwrap_or(&"".to_string())
-                        ))
+                        .arg(format!("filename={}", file_name.unwrap_or(&"".to_string())))
                         .arg("-F")
                         .arg(format!(
                             "parent_id={}",
@@ -489,7 +486,7 @@ fn main() {
 
                 let extractions =
                     put::files::get_extractions(config.api_token).expect("fetching extractions");
-                let table = Table::new(&extractions.extractions)
+                let table = Table::new(extractions.extractions)
                     .with(Style::markdown())
                     .to_string();
 
@@ -518,7 +515,7 @@ fn main() {
 
                 let transfers_response =
                     put::transfers::list(config.api_token).expect("fetching transfers");
-                let table = Table::new(&transfers_response.transfers)
+                let table = Table::new(transfers_response.transfers)
                     .with(Style::markdown())
                     .to_string();
                 println!("\n# Your transfers\n");
