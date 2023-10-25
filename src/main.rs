@@ -1,9 +1,9 @@
-use clap::{arg, Command};
+use clap::{arg, Arg, Command};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::{Command as ProcessCommand, Stdio};
 use std::{thread, time};
-use tabled::{Style, Table};
+use tabled::{settings::Style, Table};
 
 mod put;
 
@@ -97,6 +97,28 @@ fn cli() -> Command {
                         .about("Upload file(s) to your account")
                         .long_about("Uploads file(s) to your account.")
                         .arg_required_else_help(true)
+                        .arg(
+                            Arg::new("parent_id")
+                            .short('p')
+                            .long("parent")
+                            .help("ID of a Put folder to upload to instead of the root folder")
+                            .required(false)
+                        )
+                        .arg(
+                            Arg::new("file_name")
+                            .short('n')
+                            .long("name")
+                            .help("Override file name")
+                            .required(false)
+                        )
+                        .arg(
+                            Arg::new("is_silent")
+                            .short('s')
+                            .long("silent")
+                            .help("Run CURL in silent mode")
+                            .required(false)
+                            .num_args(0)
+                        )
                         .arg(
                             arg!(<PATH> ... "Valid paths of files to upload")
                                 .value_parser(clap::value_parser!(PathBuf)),
@@ -311,7 +333,7 @@ fn main() {
                     .expect("missing query argument");
                 let files = put::files::search(config.api_token, query.to_string())
                     .expect("querying files");
-                let table = Table::new(&files.files).with(Style::markdown()).to_string();
+                let table = Table::new(files.files).with(Style::markdown()).to_string();
                 println!("\n# Results for `{}`\n", &query);
                 println!("{}\n", table);
             }
@@ -383,18 +405,40 @@ fn main() {
             Some(("upload", sub_matches)) => {
                 require_auth(&config);
 
+                let parent_id = sub_matches.get_one::<String>("parent_id");
+
+                let file_name = sub_matches.get_one::<String>("file_name");
+
+                let is_silent = sub_matches.get_one::<bool>("is_silent");
+
+                let mut curl_args: Vec<String> = vec![];
+
+                if *is_silent.unwrap_or(&false) {
+                    // Run CURL in silent mode
+                    curl_args.push("-s".to_string());
+                }
+
                 let paths = sub_matches
                     .get_many::<PathBuf>("PATH")
                     .into_iter()
                     .flatten()
                     .collect::<Vec<_>>();
+
                 for path in paths {
                     println!("Uploading: {}\n", path.to_string_lossy());
                     ProcessCommand::new("curl")
+                        .args(curl_args.clone())
                         .arg("-H")
                         .arg(format!("Authorization: Bearer {}", config.api_token))
                         .arg("-F")
                         .arg(format!("file=@{}", path.to_string_lossy()))
+                        .arg("-F")
+                        .arg(format!("filename={}", file_name.unwrap_or(&"".to_string())))
+                        .arg("-F")
+                        .arg(format!(
+                            "parent_id={}",
+                            parent_id.unwrap_or(&"0".to_string())
+                        ))
                         .arg("https://upload.put.io/v2/files/upload")
                         .stdout(Stdio::piped())
                         .spawn()
@@ -442,7 +486,7 @@ fn main() {
 
                 let extractions =
                     put::files::get_extractions(config.api_token).expect("fetching extractions");
-                let table = Table::new(&extractions.extractions)
+                let table = Table::new(extractions.extractions)
                     .with(Style::markdown())
                     .to_string();
 
@@ -471,7 +515,7 @@ fn main() {
 
                 let transfers_response =
                     put::transfers::list(config.api_token).expect("fetching transfers");
-                let table = Table::new(&transfers_response.transfers)
+                let table = Table::new(transfers_response.transfers)
                     .with(Style::markdown())
                     .to_string();
                 println!("\n# Your transfers\n");
