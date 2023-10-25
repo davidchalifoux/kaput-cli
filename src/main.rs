@@ -98,15 +98,27 @@ fn cli() -> Command {
                         .long_about("Uploads file(s) to your account.")
                         .arg_required_else_help(true)
                         .arg(
-                                Arg::new("parent_id")
-                                .short('p')
-                                .help("ID of a Put folder to upload to instead of the root folder")
-                            )
-                            .arg(
-                                Arg::new("filename")
-                                .short('n')
-                                .help("Override file name")
-                            )
+                            Arg::new("parent_id")
+                            .short('p')
+                            .long("parent")
+                            .help("ID of a Put folder to upload to instead of the root folder")
+                            .required(false)
+                        )
+                        .arg(
+                            Arg::new("file_name")
+                            .short('n')
+                            .long("name")
+                            .help("Override file name")
+                            .required(false)
+                        )
+                        .arg(
+                            Arg::new("is_silent")
+                            .short('s')
+                            .long("silent")
+                            .help("Run CURL in silent mode")
+                            .required(false)
+                            .num_args(0)
+                        )
                         .arg(
                             arg!(<PATH> ... "Valid paths of files to upload")
                                 .value_parser(clap::value_parser!(PathBuf)),
@@ -395,16 +407,27 @@ fn main() {
 
                 let parent_id = sub_matches.get_one::<String>("parent_id");
 
-                let filename = sub_matches.get_one::<String>("filename");
+                let file_name = sub_matches.get_one::<String>("file_name");
+
+                let is_silent = sub_matches.get_one::<bool>("is_silent");
+
+                let mut curl_args: Vec<String> = vec![];
+
+                if *is_silent.unwrap_or(&false) == true {
+                    // Run CURL in silent mode
+                    curl_args.push("-s".to_string());
+                }
 
                 let paths = sub_matches
                     .get_many::<PathBuf>("PATH")
                     .into_iter()
                     .flatten()
                     .collect::<Vec<_>>();
+
                 for path in paths {
                     println!("Uploading: {}\n", path.to_string_lossy());
                     ProcessCommand::new("curl")
+                        .args(curl_args.clone())
                         .arg("-H")
                         .arg(format!("Authorization: Bearer {}", config.api_token))
                         .arg("-F")
@@ -412,7 +435,7 @@ fn main() {
                         .arg("-F")
                         .arg(format!(
                             "filename={}",
-                            filename.clone().unwrap_or(&"".to_string())
+                            file_name.clone().unwrap_or(&"".to_string())
                         ))
                         .arg("-F")
                         .arg(format!(
