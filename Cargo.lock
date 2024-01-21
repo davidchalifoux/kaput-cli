@@ -527,7 +527,7 @@ dependencies = [
 
 [[package]]
 name = "kaput-cli"
-version = "2.1.3"
+version = "2.2.0"
 dependencies = [
  "bytefmt",
  "clap",
