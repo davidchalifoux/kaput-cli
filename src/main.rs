@@ -50,8 +50,8 @@ fn cli() -> Command {
             Command::new("logout")
                 .about("Logout of your account")
                 .long_about(
-                "Logs out of your Put.io account by removing the auth token saved on your device.",
-            ),
+                    "Logs out of your Put.io account by removing the auth token saved on your device.",
+                ),
         )
         .subcommand(
             Command::new("files")
@@ -99,25 +99,25 @@ fn cli() -> Command {
                         .arg_required_else_help(true)
                         .arg(
                             Arg::new("parent_id")
-                            .short('p')
-                            .long("parent")
-                            .help("ID of a Put folder to upload to instead of the root folder")
-                            .required(false)
+                                .short('p')
+                                .long("parent")
+                                .help("ID of a Put folder to upload to instead of the root folder")
+                                .required(false)
                         )
                         .arg(
                             Arg::new("file_name")
-                            .short('n')
-                            .long("name")
-                            .help("Override file name")
-                            .required(false)
+                                .short('n')
+                                .long("name")
+                                .help("Override file name")
+                                .required(false)
                         )
                         .arg(
                             Arg::new("is_silent")
-                            .short('s')
-                            .long("silent")
-                            .help("Run CURL in silent mode")
-                            .required(false)
-                            .num_args(0)
+                                .short('s')
+                                .long("silent")
+                                .help("Run CURL in silent mode")
+                                .required(false)
+                                .num_args(0)
                         )
                         .arg(
                             arg!(<PATH> ... "Valid paths of files to upload")
@@ -198,7 +198,17 @@ fn cli() -> Command {
                             "Clears all finshed transfers on your account. Does not remove files.",
                         ),
                 )
-                ,
+            ,
+        )
+        .subcommand(
+            Command::new("play")
+                .about("Stream a video file")
+                .long_about(
+                    "Plays a video file using MPV.\n\
+                    If you do not have MPV installed, visit https://mpv.io/installation/.",
+                )
+                .arg_required_else_help(true)
+                .arg(arg!(<FILE_ID> "ID of a file (required)")),
         )
         .subcommand(
             Command::new("whoami")
@@ -271,6 +281,33 @@ fn main() {
             confy::store(APP_NAME, None, cfg).expect("updating config file");
             println!("Signed out successfully!")
         }
+        Some(("play", sub_matches)) => {
+            require_auth(&config);
+
+            let file_id = sub_matches
+                .get_one::<String>("FILE_ID")
+                .expect("missing file ID argument")
+                .parse::<u32>()
+                .expect("parsing file_id");
+
+            let file_info =
+                put::files::list(config.api_token.clone(), file_id).expect("fetching file info");
+
+            if file_info.parent.file_type != "VIDEO" {
+                println!("File type must be video.");
+                return;
+            }
+
+            let download_url = put::files::url(config.api_token, file_id).expect("generating url");
+
+            ProcessCommand::new("mpv")
+                .arg(download_url.url)
+                .stdout(Stdio::piped())
+                .spawn()
+                .expect("error while spawning mpv (is it installed?)")
+                .wait()
+                .expect("error while running MPV");
+        }
         Some(("whoami", _sub_matches)) => {
             let account = require_auth(&config);
             println!(
@@ -295,9 +332,12 @@ fn main() {
                     None => 0,
                 };
                 let files = put::files::list(config.api_token, folder_id).expect("fetching files");
+
                 if files.parent.file_type != "FOLDER" {
-                    panic!("the ID provided should be for a folder and not a file")
+                    println!("The ID provided should be for a folder and not a file");
+                    return;
                 }
+
                 let table = Table::new(&files.files).with(Style::markdown()).to_string();
                 println!("\n# {}\n", &files.parent.name);
                 println!("{}\n", table);
@@ -331,9 +371,12 @@ fn main() {
                 let query = sub_matches
                     .get_one::<String>("QUERY")
                     .expect("missing query argument");
+
                 let files = put::files::search(config.api_token, query.to_string())
                     .expect("querying files");
+
                 let table = Table::new(files.files).with(Style::markdown()).to_string();
+
                 println!("\n# Results for `{}`\n", &query);
                 println!("{}\n", table);
             }
@@ -362,7 +405,7 @@ fn main() {
                         .arg(url_response.url)
                         .stdout(Stdio::piped())
                         .spawn()
-                        .expect("running CURL command")
+                        .expect("error while spawning curl")
                         .wait_with_output()
                         .expect("running CURL command");
 
