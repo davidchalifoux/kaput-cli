@@ -2,22 +2,28 @@ use std::fmt;
 
 use reqwest::blocking::multipart;
 use serde::{Deserialize, Serialize};
+use serde_with::{serde_as, DefaultOnNull};
 use tabled::Tabled;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FileSize(u64);
+
 impl fmt::Display for FileSize {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", bytefmt::format(self.0))
     }
 }
 
+#[serde_as]
 #[derive(Debug, Serialize, Deserialize, Tabled)]
 pub struct File {
     pub id: u32,
     pub name: String,
     pub file_type: String,
     pub size: FileSize,
+    pub created_at: String,
+    #[serde_as(as = "DefaultOnNull")]
+    pub parent_id: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
