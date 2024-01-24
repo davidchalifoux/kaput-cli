@@ -62,7 +62,18 @@ fn cli() -> Command {
                     Command::new("list")
                         .about("List your files and folders")
                         .long_about("Lists your files and folders.")
-                        .arg(arg!([FOLDER_ID] "Lists the contents of a folder (optional)")),
+                        .arg(arg!([FOLDER_ID] "Lists the contents of a folder (optional)"))
+                        .arg(Arg::new("self")
+                            .short('s')
+                            .long("self")
+                            .help("If set, returns the info for the folder itself in JSON format")
+                            .required(false)
+                            .num_args(0))
+                        .arg(Arg::new("json")
+                            .long("json")
+                            .help("If set, returns the output in JSON format")
+                            .required(false)
+                            .num_args(0)),
                 )
                 .subcommand(
                     Command::new("search")
@@ -151,7 +162,7 @@ fn cli() -> Command {
                         .long_about("Extracts ZIP and RAR archives.")
                         .arg_required_else_help(true)
                         .arg(arg!(<FILE_ID> "ID(s) of the file(s) to extract (required)")),
-                ),
+                )
         )
         .subcommand(
             Command::new("transfers")
@@ -193,9 +204,9 @@ fn cli() -> Command {
                 )
                 .subcommand(
                     Command::new("clean")
-                        .about("Clear all finshed transfers")
+                        .about("Clear all finished transfers")
                         .long_about(
-                            "Clears all finshed transfers on your account. Does not remove files.",
+                            "Clears all finished transfers on your account. Does not remove files.",
                         ),
                 )
             ,
@@ -327,17 +338,35 @@ fn main() {
                 require_auth(&config);
 
                 let folder_id_result = sub_matches.get_one::<String>("FOLDER_ID");
+
                 let folder_id = match folder_id_result {
                     Some(folder_id) => folder_id.parse::<u32>().expect("parsing folder_id"),
                     None => 0,
                 };
+
                 let files = put::files::list(config.api_token, folder_id).expect("fetching files");
+
+                let should_only_show_self = sub_matches.get_one::<bool>("self");
+
+                if *should_only_show_self.unwrap_or(&false) {
+                    // Only show info for the parent
+                    println!("{}", serde_json::to_string_pretty(&files.parent).unwrap());
+                    return;
+                }
 
                 if files.parent.file_type != "FOLDER" {
                     println!("The ID provided should be for a folder and not a file");
                     return;
                 }
 
+                let should_return_json = sub_matches.get_one::<bool>("json");
+                if *should_return_json.unwrap_or(&false) {
+                    // Return in JSON format
+                    println!("{}", serde_json::to_string_pretty(&files.files).unwrap());
+                    return;
+                }
+
+                // Return table format
                 let table = Table::new(&files.files).with(Style::markdown()).to_string();
                 println!("\n# {}\n", &files.parent.name);
                 println!("{}\n", table);
