@@ -1,4 +1,4 @@
-name: Release
+name: Upload Binary
 
 permissions:
   contents: write
