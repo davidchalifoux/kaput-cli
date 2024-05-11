@@ -1,29 +1,17 @@
-name: Upload Binary
+name: Upload Binaries
 
 permissions:
   contents: write
 
 on:
-  push:
-    tags:
-      - v*
+  release:
+    types: [published]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: taiki-e/create-gh-release-action@v1
-        with:
-          # (optional) Path to changelog.
-          # changelog: CHANGELOG.md
-          # (required) GitHub token for creating GitHub Releases.
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-  upload-assets:
+  upload-binaries:
     strategy:
       matrix:
         include:
@@ -51,6 +39,7 @@ jobs:
           # Note that glob pattern is not supported yet.
           bin: kaput
           # (optional) Target triple, default is host triple.
+          archive: $bin-$tag-$target
           target: ${{ matrix.target }}
           # (required) GitHub token for uploading assets to GitHub Releases.
           token: ${{ secrets.GITHUB_TOKEN }}
