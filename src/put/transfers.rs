@@ -43,9 +43,16 @@ pub fn list(api_token: String) -> Result<ListTransferResponse, Box<dyn std::erro
 }
 
 /// Starts a new transfer on the account with the given URL.
-pub fn add(api_token: String, url: String) -> Result<(), Box<dyn std::error::Error>> {
+pub fn add(
+    api_token: String,
+    url: String,
+    parent_id: Option<String>,
+) -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new().text("url", url);
+    let form = multipart::Form::new()
+        .text("url", url)
+        .text("save_parent_id", parent_id.unwrap_or(String::from("0")));
+
     client
         .post("https://api.put.io/v2/transfers/add")
         .multipart(form)

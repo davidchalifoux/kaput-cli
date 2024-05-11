@@ -179,7 +179,14 @@ fn cli() -> Command {
                         .about("Add new transfer with URL")
                         .long_about("Adds new transfers to your account with a URL.")
                         .arg_required_else_help(true)
-                        .arg(arg!(<URL> "URL to transfer (required)")),
+                        .arg(arg!(<URL> "URL to transfer (required)"))
+                        .arg(
+                            Arg::new("parent_id")
+                                .short('p')
+                                .long("parent")
+                                .help("ID of a Put folder to upload to instead of the root folder")
+                                .required(false)
+                        ),
                 )
                 .subcommand(
                     Command::new("cancel")
@@ -599,7 +606,12 @@ fn main() {
                 let url = sub_matches
                     .get_one::<String>("URL")
                     .expect("missing URL argument");
-                put::transfers::add(config.api_token, url.to_string()).expect("starting transfer");
+
+                let parent = sub_matches.get_one::<String>("parent_id");
+
+                put::transfers::add(config.api_token, url.to_string(), parent.cloned())
+                    .expect("starting transfer");
+
                 println!("Transfer added!");
             }
             Some(("cancel", sub_matches)) => {
