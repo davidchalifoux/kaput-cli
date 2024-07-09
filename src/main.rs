@@ -94,14 +94,20 @@ fn cli() -> Command {
                         .about("Download a file or folder")
                         .long_about("Downloads a file or folder from your account to your device.")
                         .arg_required_else_help(true)
-                        .arg(arg!(<FILE_ID> "ID of a file or folder (required)")),
+                        .arg(Arg::new("FILE_ID").required(true).help("ID(s) of a file or folder (required)"))
+                        .arg(Arg::new("recursive")
+                            .short('r')
+                            .long("recursive")
+                            .help("Download the contents of a folder recursively")
+                            .required(false)
+                            .num_args(0)),
                 )
                 .subcommand(
                     Command::new("delete")
                         .about("Delete file(s)")
                         .long_about("Deletes the specified file(s) on your account.")
                         .arg_required_else_help(true)
-                        .arg(arg!(<FILE_ID> "ID(s) of a file (required)")),
+                        .arg(Arg::new("FILE_ID").required(true).help("ID(s) of a file (required)")),
                 )
                 .subcommand(
                     Command::new("upload")
@@ -419,58 +425,21 @@ fn main() {
             Some(("download", sub_matches)) => {
                 require_auth(&config);
 
+                let recursive = sub_matches.get_flag("recursive");
+
                 let file_id = sub_matches
                     .get_one::<String>("FILE_ID")
                     .expect("missing file_id argument");
+
                 let file_id_int = file_id.parse::<u32>().expect("parsing file_id");
-                let files = put::files::list(config.api_token.clone(), file_id_int)
-                    .expect("querying files");
-                if files.parent.file_type != "FOLDER" {
-                    // ID is for a file
-                    let url_response = put::files::url(config.api_token, file_id_int)
-                        .expect("creating download URL");
 
-                    println!("Downloading: {}\n", files.parent.name);
-
-                    // https://rust-lang-nursery.github.io/rust-cookbook/os/external.html#redirect-both-stdout-and-stderr-of-child-process-to-the-same-file
-                    ProcessCommand::new("curl")
-                        .arg("-C")
-                        .arg("-")
-                        .arg("-o")
-                        .arg(files.parent.name)
-                        .arg(url_response.url)
-                        .stdout(Stdio::piped())
-                        .spawn()
-                        .expect("error while spawning curl")
-                        .wait_with_output()
-                        .expect("running CURL command");
-
-                    println!("\nDownload finished!")
-                } else {
-                    // ID is for a folder
-                    // Create a ZIP
-                    println!("Creating ZIP...");
-                    let zip_url = put::zips::create(config.api_token, files.parent.id)
-                        .expect("creating zip job");
-                    println!("ZIP created!");
-
-                    println!("Downloading: {}\n", files.parent.name);
-
-                    // https://rust-lang-nursery.github.io/rust-cookbook/os/external.html#redirect-both-stdout-and-stderr-of-child-process-to-the-same-file
-                    ProcessCommand::new("curl")
-                        .arg("-C")
-                        .arg("-")
-                        .arg("-o")
-                        .arg(files.parent.name + ".zip")
-                        .arg(zip_url)
-                        .stdout(Stdio::piped())
-                        .spawn()
-                        .expect("failed to run CURL command")
-                        .wait_with_output()
-                        .expect("failed to run CURL command");
-
-                    println!("\nDownload finished!")
-                }
+                put::files::download(
+                    config.api_token.clone(),
+                    file_id_int.clone(),
+                    recursive,
+                    None,
+                )
+                .expect("downloading file(s)");
             }
             Some(("delete", sub_matches)) => {
                 require_auth(&config);

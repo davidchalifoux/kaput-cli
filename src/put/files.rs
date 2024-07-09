@@ -1,9 +1,12 @@
-use std::fmt;
+use std::process::{Command as ProcessCommand, Stdio};
+use std::{fmt, fs};
 
 use reqwest::blocking::multipart;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, DefaultOnNull};
 use tabled::Tabled;
+
+use crate::put;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FileSize(u64);
@@ -172,4 +175,96 @@ pub fn get_extractions(
         .send()?
         .json()?;
     Ok(response)
+}
+
+// Downloads a file or folder
+pub fn download(
+    api_token: String,
+    file_id: u32,
+    recursive: bool,
+    path: Option<String>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let files = put::files::list(api_token.clone(), file_id.clone()).expect("querying files");
+
+    match files.parent.file_type.as_str() {
+        "FOLDER" => {
+            // ID is for a folder
+            match recursive {
+                true => {
+                    // Recursively download the folder
+                    let directory_path = match path {
+                        Some(p) => format!("{}/{}", p, files.parent.name.clone()), // Use the provided path if there is one
+                        None => format!("./{}", files.parent.name.clone()),
+                    };
+
+                    fs::create_dir_all(directory_path.clone())?;
+
+                    for file in files.files {
+                        download(
+                            api_token.clone(),
+                            file.id,
+                            true,
+                            Some(directory_path.clone()),
+                        )
+                        .expect("downloading file recursively");
+                    }
+                }
+                false => {
+                    // Create a ZIP
+                    println!("Creating ZIP...");
+                    let zip_url = put::zips::create(api_token.clone(), files.parent.id)
+                        .expect("creating zip job");
+                    println!("ZIP created!");
+
+                    println!("Downloading: {}\n", files.parent.name);
+
+                    // https://rust-lang-nursery.github.io/rust-cookbook/os/external.html#redirect-both-stdout-and-stderr-of-child-process-to-the-same-file
+                    ProcessCommand::new("curl")
+                        .arg("-C")
+                        .arg("-")
+                        .arg("-o")
+                        .arg(files.parent.name + ".zip")
+                        .arg(zip_url)
+                        .stdout(Stdio::piped())
+                        .spawn()
+                        .expect("failed to run CURL command")
+                        .wait_with_output()
+                        .expect("failed to run CURL command");
+
+                    println!("\nDownload finished!")
+                }
+            }
+        }
+        _ => {
+            // ID is for a file
+            let url_response = put::files::url(api_token, file_id).expect("creating download URL");
+
+            let directory_path = match path {
+                Some(p) => p, // Use the provided path if there is one
+                None => format!("./{}", files.parent.name.clone()), // Default to a path based on the file name
+            };
+
+            let output_path = format!("{}/{}", directory_path, files.parent.name);
+
+            println!("Downloading: {}", files.parent.name);
+            println!("Saving to: {}\n", output_path);
+
+            // https://rust-lang-nursery.github.io/rust-cookbook/os/external.html#redirect-both-stdout-and-stderr-of-child-process-to-the-same-file
+            ProcessCommand::new("curl")
+                .arg("-C")
+                .arg("-")
+                .arg("-o")
+                .arg(output_path)
+                .arg(url_response.url)
+                .stdout(Stdio::piped())
+                .spawn()
+                .expect("error while spawning curl")
+                .wait_with_output()
+                .expect("running CURL command");
+
+            println!("\nDownload finished!\n")
+        }
+    }
+
+    Ok(())
 }
