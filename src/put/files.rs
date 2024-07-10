@@ -37,7 +37,7 @@ pub struct FilesResponse {
 
 /// Returns the user's files.
 pub fn list(
-    api_token: String,
+    api_token: &String,
     parent_id: u32,
 ) -> Result<FilesResponse, Box<dyn std::error::Error>> {
     let client = reqwest::blocking::Client::new();
@@ -45,7 +45,7 @@ pub fn list(
         .get(format!(
             "https://api.put.io/v2/files/list?parent_id={parent_id}"
         ))
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {}", *api_token))
         .send()?
         .json()?;
     Ok(response)
@@ -90,11 +90,11 @@ pub struct UrlResponse {
 }
 
 /// Returns a download URL for a given file.
-pub fn url(api_token: String, file_id: u32) -> Result<UrlResponse, Box<dyn std::error::Error>> {
+pub fn url(api_token: &String, file_id: u32) -> Result<UrlResponse, Box<dyn std::error::Error>> {
     let client = reqwest::blocking::Client::new();
     let response: UrlResponse = client
         .get(format!("https://api.put.io/v2/files/{file_id}/url"))
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {}", *api_token))
         .send()?
         .json()?;
     Ok(response)
@@ -179,12 +179,12 @@ pub fn get_extractions(
 
 // Downloads a file or folder
 pub fn download(
-    api_token: String,
+    api_token: &String,
     file_id: u32,
     recursive: bool,
-    path: Option<String>,
+    path: Option<&String>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let files = put::files::list(api_token.clone(), file_id.clone()).expect("querying files");
+    let files: FilesResponse = put::files::list(api_token, file_id).expect("querying files");
 
     match files.parent.file_type.as_str() {
         "FOLDER" => {
@@ -192,38 +192,41 @@ pub fn download(
             match recursive {
                 true => {
                     // Recursively download the folder
-                    let directory_path = match path {
-                        Some(p) => format!("{}/{}", p, files.parent.name.clone()), // Use the provided path if there is one
-                        None => format!("./{}", files.parent.name.clone()),
+                    let directory_path: String = match path {
+                        Some(p) => format!("{}/{}", p, files.parent.name), // Use the provided path if there is one
+                        None => format!("./{}", files.parent.name),
                     };
 
-                    fs::create_dir_all(directory_path.clone())?;
+                    fs::create_dir_all(directory_path.clone()).expect("creating directory");
 
                     for file in files.files {
-                        download(
-                            api_token.clone(),
-                            file.id,
-                            true,
-                            Some(directory_path.clone()),
-                        )
-                        .expect("downloading file recursively");
+                        download(api_token, file.id, true, Some(&directory_path))
+                            .expect("downloading file recursively");
                     }
                 }
                 false => {
                     // Create a ZIP
                     println!("Creating ZIP...");
-                    let zip_url = put::zips::create(api_token.clone(), files.parent.id)
-                        .expect("creating zip job");
+
+                    let zip_url =
+                        put::zips::create(api_token, files.parent.id).expect("creating zip job");
+
                     println!("ZIP created!");
 
-                    println!("Downloading: {}\n", files.parent.name);
+                    let output_path: String = match path {
+                        Some(p) => format!("{}/{}.zip", p, files.parent.name),
+                        None => format!("./{}.zip", files.parent.name),
+                    };
+
+                    println!("Downloading: {}", files.parent.name);
+                    println!("Saving to: {}\n", output_path);
 
                     // https://rust-lang-nursery.github.io/rust-cookbook/os/external.html#redirect-both-stdout-and-stderr-of-child-process-to-the-same-file
                     ProcessCommand::new("curl")
                         .arg("-C")
                         .arg("-")
                         .arg("-o")
-                        .arg(files.parent.name + ".zip")
+                        .arg(output_path)
                         .arg(zip_url)
                         .stdout(Stdio::piped())
                         .spawn()
@@ -231,20 +234,19 @@ pub fn download(
                         .wait_with_output()
                         .expect("failed to run CURL command");
 
-                    println!("\nDownload finished!")
+                    println!("\nDownload finished!\n")
                 }
             }
         }
         _ => {
             // ID is for a file
-            let url_response = put::files::url(api_token, file_id).expect("creating download URL");
+            let url_response: UrlResponse =
+                put::files::url(api_token, file_id).expect("creating download URL");
 
-            let directory_path = match path {
-                Some(p) => p, // Use the provided path if there is one
-                None => format!("./{}", files.parent.name.clone()), // Default to a path based on the file name
+            let output_path: String = match path {
+                Some(p) => format!("{}/{}", p, files.parent.name),
+                None => format!("./{}", files.parent.name),
             };
-
-            let output_path = format!("{}/{}", directory_path, files.parent.name);
 
             println!("Downloading: {}", files.parent.name);
             println!("Saving to: {}\n", output_path);

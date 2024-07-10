@@ -95,10 +95,11 @@ fn cli() -> Command {
                         .long_about("Downloads a file or folder from your account to your device.")
                         .arg_required_else_help(true)
                         .arg(Arg::new("FILE_ID").required(true).help("ID(s) of a file or folder (required)"))
+                        .arg(Arg::new("path").short('p').long("path").help("Path to download the file(s) to").required(false).num_args(1))
                         .arg(Arg::new("recursive")
                             .short('r')
                             .long("recursive")
-                            .help("Download the contents of a folder recursively")
+                            .help("Download the contents of a folder recursively without creating a zip")
                             .required(false)
                             .num_args(0)),
                 )
@@ -254,12 +255,13 @@ const APP_NAME: &str = "kaput-cli";
 fn main() {
     let config: ConfigFile = confy::load(APP_NAME, None).expect("reading config file");
 
-    let matches = cli().get_matches();
+    let matches: clap::ArgMatches = cli().get_matches();
 
     match matches.subcommand() {
         Some(("login", _sub_matches)) => {
             // Create new OOB code and prompt user to link
             let oob_code = put::oob::get().expect("fetching OOB code");
+
             println!(
                 "Go to https://put.io/link and enter the code: {:#?}",
                 oob_code
@@ -315,14 +317,14 @@ fn main() {
                 .expect("parsing file_id");
 
             let file_info =
-                put::files::list(config.api_token.clone(), file_id).expect("fetching file info");
+                put::files::list(&config.api_token, file_id).expect("fetching file info");
 
             if file_info.parent.file_type != "VIDEO" {
                 println!("File type must be video.");
                 return;
             }
 
-            let download_url = put::files::url(config.api_token, file_id).expect("generating url");
+            let download_url = put::files::url(&config.api_token, file_id).expect("generating url");
 
             ProcessCommand::new("mpv")
                 .arg(download_url.url)
@@ -357,7 +359,7 @@ fn main() {
                     None => 0,
                 };
 
-                let files = put::files::list(config.api_token, folder_id).expect("fetching files");
+                let files = put::files::list(&config.api_token, folder_id).expect("fetching files");
 
                 let should_only_show_self = sub_matches.get_one::<bool>("self");
 
@@ -393,17 +395,20 @@ fn main() {
                     .parse::<u32>()
                     .expect("parsing file_id");
 
-                let file_info = put::files::list(config.api_token.clone(), file_id)
-                    .expect("fetching file info");
+                let file_info =
+                    put::files::list(&config.api_token, file_id).expect("fetching file info");
 
                 if file_info.parent.file_type == "FOLDER" {
                     println!("Creating zip...");
+
                     let zip_url =
-                        put::zips::create(config.api_token, file_id).expect("generating zip url");
+                        put::zips::create(&config.api_token, file_id).expect("generating zip url");
+
                     println!("URL: {:#?}", zip_url);
                 } else {
                     let download_url =
-                        put::files::url(config.api_token, file_id).expect("generating url");
+                        put::files::url(&config.api_token, file_id).expect("generating url");
+
                     println!("URL: {:#?}", download_url.url)
                 }
             }
@@ -427,19 +432,16 @@ fn main() {
 
                 let recursive = sub_matches.get_flag("recursive");
 
+                let path = sub_matches.get_one::<String>("path");
+
                 let file_id = sub_matches
                     .get_one::<String>("FILE_ID")
                     .expect("missing file_id argument");
 
                 let file_id_int = file_id.parse::<u32>().expect("parsing file_id");
 
-                put::files::download(
-                    config.api_token.clone(),
-                    file_id_int.clone(),
-                    recursive,
-                    None,
-                )
-                .expect("downloading file(s)");
+                put::files::download(&config.api_token, file_id_int, recursive, path)
+                    .expect("downloading file(s)");
             }
             Some(("delete", sub_matches)) => {
                 require_auth(&config);
