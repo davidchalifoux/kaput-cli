@@ -1,6 +1,9 @@
 use std::{thread, time};
 
-use reqwest::blocking::multipart;
+use reqwest::{
+    blocking::{multipart::Form, Client},
+    Error,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -11,20 +14,21 @@ pub struct CreateZipResponse {
 /// Creates a new ZIP job with the given file id.
 ///
 /// Waits for the zip job complete, and returns a string with the download URL.
-pub fn create(api_token: &String, file_id: u32) -> Result<String, Box<dyn std::error::Error>> {
+pub fn create(client: &Client, api_token: &String, file_id: u32) -> Result<String, Error> {
     // Start ZIP job
-    let client: reqwest::blocking::Client = reqwest::blocking::Client::new();
-    let form: multipart::Form = multipart::Form::new().text("file_ids", format!("{file_id}"));
+    let form: Form = Form::new().text("file_ids", file_id.to_string());
+
     let response: CreateZipResponse = client
         .post("https://api.put.io/v2/zips/create")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", *api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?
         .json()?;
 
     // Wait for ZIP job to finish
     loop {
-        let check_zip_response = get(api_token, response.zip_id).expect("checking zip status");
+        let check_zip_response =
+            get(client, api_token, response.zip_id).expect("checking zip status");
 
         if let Some(zip_url) = check_zip_response.url {
             return Ok(zip_url);
@@ -41,16 +45,12 @@ pub struct CheckZipResponse {
 }
 
 /// Checks the status of a given zip job
-pub fn get(
-    api_token: &String,
-    zip_id: u32,
-) -> Result<CheckZipResponse, Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-
+pub fn get(client: &Client, api_token: &String, zip_id: u32) -> Result<CheckZipResponse, Error> {
     let response: CheckZipResponse = client
         .get(format!("https://api.put.io/v2/zips/{zip_id}"))
-        .header("authorization", format!("Bearer {}", *api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?
         .json()?;
+
     Ok(response)
 }

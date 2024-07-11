@@ -1,7 +1,9 @@
 use std::process::{Command as ProcessCommand, Stdio};
 use std::{fmt, fs};
 
-use reqwest::blocking::multipart;
+use reqwest::blocking::multipart::Form;
+use reqwest::blocking::Client;
+use reqwest::Error;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, DefaultOnNull};
 use tabled::Tabled;
@@ -36,18 +38,15 @@ pub struct FilesResponse {
 }
 
 /// Returns the user's files.
-pub fn list(
-    api_token: &String,
-    parent_id: u32,
-) -> Result<FilesResponse, Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
+pub fn list(client: &Client, api_token: &String, parent_id: u32) -> Result<FilesResponse, Error> {
     let response: FilesResponse = client
         .get(format!(
             "https://api.put.io/v2/files/list?parent_id={parent_id}"
         ))
-        .header("authorization", format!("Bearer {}", *api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?
         .json()?;
+
     Ok(response)
 }
 
@@ -59,26 +58,27 @@ pub struct SearchResponse {
 
 /// Searches files for given keyword.
 pub fn search(
-    api_token: String,
-    query: String,
-) -> Result<SearchResponse, Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
+    client: &Client,
+    api_token: &String,
+    query: &String,
+) -> Result<SearchResponse, Error> {
     let response: SearchResponse = client
         .get(format!("https://api.put.io/v2/files/search?query={query}"))
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?
         .json()?;
+
     Ok(response)
 }
 
 /// Delete file(s)
-pub fn delete(api_token: String, file_id: String) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new().text("file_ids", file_id);
+pub fn delete(client: &Client, api_token: &String, file_id: &str) -> Result<(), Error> {
+    let form: Form = Form::new().text("file_ids", file_id.to_owned());
+
     client
         .post("https://api.put.io/v2/files/delete")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
 
     Ok(())
@@ -90,30 +90,31 @@ pub struct UrlResponse {
 }
 
 /// Returns a download URL for a given file.
-pub fn url(api_token: &String, file_id: u32) -> Result<UrlResponse, Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
+pub fn url(client: &Client, api_token: &String, file_id: u32) -> Result<UrlResponse, Error> {
     let response: UrlResponse = client
         .get(format!("https://api.put.io/v2/files/{file_id}/url"))
-        .header("authorization", format!("Bearer {}", *api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?
         .json()?;
+
     Ok(response)
 }
 
 /// Moves a file to a different parent
 pub fn mv(
-    api_token: String,
-    file_id: String,
+    client: &Client,
+    api_token: &String,
+    file_id: u32,
     new_parent_id: u32,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new()
-        .text("file_ids", file_id)
+) -> Result<(), Error> {
+    let form: Form = Form::new()
+        .text("file_ids", file_id.to_string())
         .text("parent_id", new_parent_id.to_string());
+
     client
         .post("https://api.put.io/v2/files/move")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
 
     Ok(())
@@ -121,31 +122,32 @@ pub fn mv(
 
 /// Renames a file
 pub fn rename(
-    api_token: String,
+    client: &Client,
+    api_token: &String,
     file_id: u32,
-    new_name: String,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new()
+    new_name: &String,
+) -> Result<(), Error> {
+    let form = Form::new()
         .text("file_id", file_id.to_string())
-        .text("name", new_name);
+        .text("name", new_name.to_owned());
+
     client
         .post("https://api.put.io/v2/files/rename")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
 
     Ok(())
 }
 
 /// Extracts ZIP and RAR archives
-pub fn extract(api_token: String, file_id: String) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new().text("file_ids", file_id);
+pub fn extract(client: &Client, api_token: &String, file_id: u32) -> Result<(), Error> {
+    let form: Form = Form::new().text("file_ids", file_id.to_string());
+
     client
         .post("https://api.put.io/v2/files/extract")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
 
     Ok(())
@@ -153,7 +155,7 @@ pub fn extract(api_token: String, file_id: String) -> Result<(), Box<dyn std::er
 
 #[derive(Debug, Serialize, Deserialize, Tabled)]
 pub struct Extraction {
-    pub id: u32,
+    pub id: String,
     pub name: String,
     pub status: String,
     pub message: String,
@@ -165,26 +167,26 @@ pub struct ExtractionResponse {
 }
 
 /// Returns active extractions
-pub fn get_extractions(
-    api_token: String,
-) -> Result<ExtractionResponse, Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
+pub fn get_extractions(client: &Client, api_token: &String) -> Result<ExtractionResponse, Error> {
     let response: ExtractionResponse = client
         .get("https://api.put.io/v2/files/extract")
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?
         .json()?;
+
     Ok(response)
 }
 
 // Downloads a file or folder
 pub fn download(
+    client: &Client,
     api_token: &String,
     file_id: u32,
     recursive: bool,
     path: Option<&String>,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let files: FilesResponse = put::files::list(api_token, file_id).expect("querying files");
+) -> Result<(), Error> {
+    let files: FilesResponse =
+        put::files::list(client, api_token, file_id).expect("querying files");
 
     match files.parent.file_type.as_str() {
         "FOLDER" => {
@@ -200,7 +202,7 @@ pub fn download(
                     fs::create_dir_all(directory_path.clone()).expect("creating directory");
 
                     for file in files.files {
-                        download(api_token, file.id, true, Some(&directory_path))
+                        download(client, api_token, file.id, true, Some(&directory_path))
                             .expect("downloading file recursively");
                     }
                 }
@@ -208,8 +210,8 @@ pub fn download(
                     // Create a ZIP
                     println!("Creating ZIP...");
 
-                    let zip_url =
-                        put::zips::create(api_token, files.parent.id).expect("creating zip job");
+                    let zip_url: String = put::zips::create(client, api_token, files.parent.id)
+                        .expect("creating zip job");
 
                     println!("ZIP created!");
 
@@ -241,7 +243,7 @@ pub fn download(
         _ => {
             // ID is for a file
             let url_response: UrlResponse =
-                put::files::url(api_token, file_id).expect("creating download URL");
+                put::files::url(client, api_token, file_id).expect("creating download URL");
 
             let output_path: String = match path {
                 Some(p) => format!("{}/{}", p, files.parent.name),
