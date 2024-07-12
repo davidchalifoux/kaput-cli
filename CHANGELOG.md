@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/davidchalifoux/kaput-cli/compare/v2.3.0...v2.4.0) (2024-07-12)
+
+
+### Features
+
+* Ability to set a path for downloads ([98fd433](https://github.com/davidchalifoux/kaput-cli/commit/98fd4338fdff39894823d2d1583ce08a05d384a3))
+* Add path flag to download ([c01c755](https://github.com/davidchalifoux/kaput-cli/commit/c01c7554be80a706bd4be67f126af0f20b87570b))
+* Move play command under files ([98fd433](https://github.com/davidchalifoux/kaput-cli/commit/98fd4338fdff39894823d2d1583ce08a05d384a3))
+* Recursive downloads (part of [#49](https://github.com/davidchalifoux/kaput-cli/issues/49)) ([98fd433](https://github.com/davidchalifoux/kaput-cli/commit/98fd4338fdff39894823d2d1583ce08a05d384a3))
+* Recursive downloads (part of 49) ([c98d14e](https://github.com/davidchalifoux/kaput-cli/commit/c98d14e2b46d19f7f297266507164cc453b7489b))
+* Use shared HTTP client instance, use references when applicable, move play command under files ([2fba983](https://github.com/davidchalifoux/kaput-cli/commit/2fba9831af8676fe40c54a372ecb9082743ca56a))
+
 ## [2.3.0](https://github.com/davidchalifoux/kaput-cli/compare/v2.2.2...v2.3.0) (2024-05-11)
 
 
