@@ -1,4 +1,7 @@
-use reqwest::blocking::multipart;
+use reqwest::{
+    blocking::{multipart::Form, Client},
+    Error,
+};
 use serde::{Deserialize, Deserializer, Serialize};
 use tabled::Tabled;
 
@@ -32,80 +35,85 @@ pub struct ListTransferResponse {
 }
 
 /// Returns the user's transfers.
-pub fn list(api_token: String) -> Result<ListTransferResponse, Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
+pub fn list(client: &Client, api_token: &String) -> Result<ListTransferResponse, Error> {
     let response: ListTransferResponse = client
         .get("https://api.put.io/v2/transfers/list")
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?
         .json()?;
+
     Ok(response)
 }
 
 /// Starts a new transfer on the account with the given URL.
 pub fn add(
-    api_token: String,
-    url: String,
-    parent_id: Option<String>,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new()
-        .text("url", url)
-        .text("save_parent_id", parent_id.unwrap_or(String::from("0")));
+    client: &Client,
+    api_token: &String,
+    url: &String,
+    parent_id: Option<&u32>,
+) -> Result<(), Error> {
+    let parent_id: u32 = match parent_id {
+        Some(id) => *id,
+        None => 0,
+    };
+
+    let form: Form = Form::new()
+        .text("url", url.to_owned())
+        .text("save_parent_id", parent_id.to_string());
 
     client
         .post("https://api.put.io/v2/transfers/add")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
 
     Ok(())
 }
 
 /// Cancels or removes transfers
-pub fn cancel(api_token: String, transfer_id: String) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new().text("transfer_ids", transfer_id);
+pub fn cancel(client: &Client, api_token: &String, transfer_id: u32) -> Result<(), Error> {
+    let form: Form = Form::new().text("transfer_ids", transfer_id.to_string());
+
     client
         .post("https://api.put.io/v2/transfers/cancel")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
 
     Ok(())
 }
 
 /// Clears all finished transfers
-pub fn clean(api_token: String) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
+pub fn clean(client: &Client, api_token: &String) -> Result<(), Error> {
     client
         .post("https://api.put.io/v2/transfers/clean")
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
+
     Ok(())
 }
 
 /// Retries failed transfers
-pub fn retry(api_token: String, transfer_id: u32) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new().text("id", transfer_id.to_string());
+pub fn retry(client: &Client, api_token: &String, transfer_id: u32) -> Result<(), Error> {
+    let form: Form = Form::new().text("id", transfer_id.to_string());
+
     client
         .post("https://api.put.io/v2/transfers/retry")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
 
     Ok(())
 }
 
 /// Removes transfers by ID
-pub fn remove(api_token: String, transfer_id: String) -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
-    let form = multipart::Form::new().text("transfer_ids", transfer_id);
+pub fn remove(client: &Client, api_token: &String, transfer_id: u32) -> Result<(), Error> {
+    let form: Form = Form::new().text("transfer_ids", transfer_id.to_string());
+
     client
         .post("https://api.put.io/v2/transfers/remove")
         .multipart(form)
-        .header("authorization", format!("Bearer {}", api_token))
+        .header("authorization", format!("Bearer {api_token}"))
         .send()?;
 
     Ok(())
