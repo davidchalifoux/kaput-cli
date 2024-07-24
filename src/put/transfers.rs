@@ -18,9 +18,9 @@ where
 #[derive(Debug, Serialize, Deserialize, Tabled)]
 pub struct Transfer {
     #[serde(default, deserialize_with = "unwrap_or_default")]
-    pub id: u32,
+    pub id: i64,
     #[serde(default, deserialize_with = "unwrap_or_default")]
-    pub file_id: u32,
+    pub file_id: i64,
     #[serde(default, deserialize_with = "unwrap_or_default")]
     pub name: String,
     #[serde(default, deserialize_with = "unwrap_or_default")]
@@ -50,9 +50,9 @@ pub fn add(
     client: &Client,
     api_token: &String,
     url: &String,
-    parent_id: Option<&u32>,
+    parent_id: Option<&i64>,
 ) -> Result<(), Error> {
-    let parent_id: u32 = match parent_id {
+    let parent_id: i64 = match parent_id {
         Some(id) => *id,
         None => 0,
     };
@@ -71,7 +71,7 @@ pub fn add(
 }
 
 /// Cancels or removes transfers
-pub fn cancel(client: &Client, api_token: &String, transfer_id: u32) -> Result<(), Error> {
+pub fn cancel(client: &Client, api_token: &String, transfer_id: i64) -> Result<(), Error> {
     let form: Form = Form::new().text("transfer_ids", transfer_id.to_string());
 
     client
@@ -94,7 +94,7 @@ pub fn clean(client: &Client, api_token: &String) -> Result<(), Error> {
 }
 
 /// Retries failed transfers
-pub fn retry(client: &Client, api_token: &String, transfer_id: u32) -> Result<(), Error> {
+pub fn retry(client: &Client, api_token: &String, transfer_id: i64) -> Result<(), Error> {
     let form: Form = Form::new().text("id", transfer_id.to_string());
 
     client
@@ -107,7 +107,7 @@ pub fn retry(client: &Client, api_token: &String, transfer_id: u32) -> Result<()
 }
 
 /// Removes transfers by ID
-pub fn remove(client: &Client, api_token: &String, transfer_id: u32) -> Result<(), Error> {
+pub fn remove(client: &Client, api_token: &String, transfer_id: i64) -> Result<(), Error> {
     let form: Form = Form::new().text("transfer_ids", transfer_id.to_string());
 
     client

@@ -22,13 +22,13 @@ impl fmt::Display for FileSize {
 #[serde_as]
 #[derive(Debug, Serialize, Deserialize, Tabled)]
 pub struct File {
-    pub id: u32,
+    pub id: i64,
     pub name: String,
     pub file_type: String,
     pub size: FileSize,
     pub created_at: String,
     #[serde_as(as = "DefaultOnNull")]
-    pub parent_id: u32,
+    pub parent_id: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -38,7 +38,7 @@ pub struct FilesResponse {
 }
 
 /// Returns the user's files.
-pub fn list(client: &Client, api_token: &String, parent_id: u32) -> Result<FilesResponse, Error> {
+pub fn list(client: &Client, api_token: &String, parent_id: i64) -> Result<FilesResponse, Error> {
     let response: FilesResponse = client
         .get(format!(
             "https://api.put.io/v2/files/list?parent_id={parent_id}"
@@ -53,7 +53,7 @@ pub fn list(client: &Client, api_token: &String, parent_id: u32) -> Result<Files
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SearchResponse {
     pub files: Vec<File>,
-    pub total: u32,
+    pub total: i64,
 }
 
 /// Searches files for given keyword.
@@ -90,7 +90,7 @@ pub struct UrlResponse {
 }
 
 /// Returns a download URL for a given file.
-pub fn url(client: &Client, api_token: &String, file_id: u32) -> Result<UrlResponse, Error> {
+pub fn url(client: &Client, api_token: &String, file_id: i64) -> Result<UrlResponse, Error> {
     let response: UrlResponse = client
         .get(format!("https://api.put.io/v2/files/{file_id}/url"))
         .header("authorization", format!("Bearer {api_token}"))
@@ -104,8 +104,8 @@ pub fn url(client: &Client, api_token: &String, file_id: u32) -> Result<UrlRespo
 pub fn mv(
     client: &Client,
     api_token: &String,
-    file_id: u32,
-    new_parent_id: u32,
+    file_id: i64,
+    new_parent_id: i64,
 ) -> Result<(), Error> {
     let form: Form = Form::new()
         .text("file_ids", file_id.to_string())
@@ -124,7 +124,7 @@ pub fn mv(
 pub fn rename(
     client: &Client,
     api_token: &String,
-    file_id: u32,
+    file_id: i64,
     new_name: &String,
 ) -> Result<(), Error> {
     let form = Form::new()
@@ -141,7 +141,7 @@ pub fn rename(
 }
 
 /// Extracts ZIP and RAR archives
-pub fn extract(client: &Client, api_token: &String, file_id: u32) -> Result<(), Error> {
+pub fn extract(client: &Client, api_token: &String, file_id: i64) -> Result<(), Error> {
     let form: Form = Form::new().text("file_ids", file_id.to_string());
 
     client
@@ -181,7 +181,7 @@ pub fn get_extractions(client: &Client, api_token: &String) -> Result<Extraction
 pub fn download(
     client: &Client,
     api_token: &String,
-    file_id: u32,
+    file_id: i64,
     recursive: bool,
     path: Option<&String>,
 ) -> Result<(), Error> {
