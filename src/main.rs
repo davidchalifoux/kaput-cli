@@ -66,7 +66,7 @@ fn cli() -> Command {
                         .arg(
                             Arg::new("FOLDER_ID")
                             .help("Lists the contents of a folder (optional)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(false)
                             .num_args(1)
                         )
@@ -104,7 +104,7 @@ fn cli() -> Command {
                         .arg_required_else_help(true)
                         .arg(
                             Arg::new("FILE_ID")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                             .help("ID of a file or folder (required)")
                         )
@@ -116,7 +116,7 @@ fn cli() -> Command {
                         .arg_required_else_help(true)
                         .arg(
                             Arg::new("FILE_ID")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                             .help("ID(s) of a file or folder (required)")
                         )
@@ -143,7 +143,7 @@ fn cli() -> Command {
                         .arg_required_else_help(true)
                         .arg(
                             Arg::new("FILE_ID")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                             .help("ID(s) of a file (required)")
                         )
@@ -157,7 +157,7 @@ fn cli() -> Command {
                             Arg::new("parent_id")
                                 .short('p')
                                 .long("parent")
-                                .value_parser(value_parser!(u32))
+                                .value_parser(value_parser!(i64))
                                 .help("ID of a Put folder to upload to instead of the root folder")
                                 .required(false)
                         )
@@ -191,12 +191,12 @@ fn cli() -> Command {
                         .arg(
                             Arg::new("FILE_ID")
                             .help("ID of the file to move (required)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true))
                         .arg(
                             Arg::new("PARENT_ID")
                             .help("ID of the new parent folder (required)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                         )
                 )
@@ -208,7 +208,7 @@ fn cli() -> Command {
                         .arg(
                             Arg::new("FILE_ID")
                             .help("ID of the file to rename (required)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                         )
                         .arg(
@@ -230,7 +230,7 @@ fn cli() -> Command {
                         .arg(
                             Arg::new("FILE_ID")
                             .help("ID of the file to extract (required)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                         )
                 )
@@ -245,7 +245,7 @@ fn cli() -> Command {
                         .arg(
                             Arg::new("FILE_ID")
                             .help("ID of a video file (required)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                         )
                 )
@@ -274,7 +274,7 @@ fn cli() -> Command {
                             Arg::new("parent_id")
                             .short('p')
                             .long("parent")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .help("ID of a Put folder to upload to instead of the root folder")
                             .required(false)
                         )
@@ -287,7 +287,7 @@ fn cli() -> Command {
                         .arg(
                             Arg::new("TRANSFER_ID")
                             .help("ID of a transfer (required)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                         )
                 )
@@ -299,7 +299,7 @@ fn cli() -> Command {
                         .arg(
                             Arg::new("TRANSFER_ID")
                             .help("ID of a transfer (required)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                         )
                 )
@@ -311,7 +311,7 @@ fn cli() -> Command {
                         .arg(
                             Arg::new("TRANSFER_ID")
                             .help("ID of a transfer (required)")
-                            .value_parser(value_parser!(u32))
+                            .value_parser(value_parser!(i64))
                             .required(true)
                         )
                 )
@@ -443,7 +443,7 @@ fn main() {
 
                 let folder_id_result = sub_matches.get_one("FOLDER_ID");
 
-                let folder_id: u32 = match folder_id_result {
+                let folder_id: i64 = match folder_id_result {
                     Some(folder_id) => *folder_id,
                     None => 0,
                 };
@@ -479,7 +479,7 @@ fn main() {
             Some(("url", sub_matches)) => {
                 require_auth(&client, &config);
 
-                let file_id: &u32 = sub_matches
+                let file_id: &i64 = sub_matches
                     .get_one("FILE_ID")
                     .expect("missing file ID argument");
 
@@ -564,6 +564,7 @@ fn main() {
 
                 for path in paths {
                     println!("Uploading: {}\n", path.to_string_lossy());
+
                     ProcessCommand::new("curl")
                         .args(curl_args.clone())
                         .arg("-H")
