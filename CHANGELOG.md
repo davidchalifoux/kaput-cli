@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/davidchalifoux/kaput-cli/compare/v2.4.0...v2.4.1) (2024-07-24)
+
+
+### Bug Fixes
+
+* Fix panic caused by negative file ID ([755f391](https://github.com/davidchalifoux/kaput-cli/commit/755f391a9f8612d8451ff402eec3099da407cf1f))
+
 ## [2.4.0](https://github.com/davidchalifoux/kaput-cli/compare/v2.3.0...v2.4.0) (2024-07-12)
 
 
