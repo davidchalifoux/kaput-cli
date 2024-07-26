@@ -135,6 +135,13 @@ fn cli() -> Command {
                             .required(false)
                             .num_args(0)
                         )
+                        .arg(
+                            Arg::new("no-replace")
+                            .long("no-replace")
+                            .help("Disable character replacement of files with illegal characters")
+                            .required(false)
+                            .num_args(0)
+                        )
                 )
                 .subcommand(
                     Command::new("delete")
@@ -519,15 +526,21 @@ fn main() {
                 require_auth(&client, &config);
 
                 let recursive = sub_matches.get_flag("recursive");
-
+                let no_replace = sub_matches.get_flag("no-replace");
                 let path = sub_matches.get_one::<String>("path");
-
                 let file_id = sub_matches
                     .get_one("FILE_ID")
                     .expect("missing file_id argument");
 
-                put::files::download(&client, &config.api_token, *file_id, recursive, path)
-                    .expect("downloading file(s)");
+                put::files::download(
+                    &client,
+                    &config.api_token,
+                    *file_id,
+                    recursive,
+                    path,
+                    no_replace,
+                )
+                .expect("downloading file(s)");
             }
             Some(("delete", sub_matches)) => {
                 require_auth(&client, &config);
