@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/davidchalifoux/kaput-cli/compare/v2.4.1...v2.4.2) (2024-07-26)
+
+
+### Bug Fixes
+
+* **download:** Replace illegal characters in file and folder names by default. This can be disabled with `--no-replace` ([d500663](https://github.com/davidchalifoux/kaput-cli/commit/d500663a99f9559cc926429331367b09d1eef11a))
+
 ## [2.4.1](https://github.com/davidchalifoux/kaput-cli/compare/v2.4.0...v2.4.1) (2024-07-24)
 
 
