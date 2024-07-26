@@ -177,13 +177,55 @@ pub fn get_extractions(client: &Client, api_token: &String) -> Result<Extraction
     Ok(response)
 }
 
-// Downloads a file or folder
+struct ReplaceChar<'a> {
+    from: &'a str,
+    to: &'a str,
+}
+
+/// Replaces illegal characters in a file name
+fn replace_illegal_chars(name: &str) -> String {
+    let mut name: String = name.to_owned();
+
+    const ILLEGAL_CHARS: [ReplaceChar<'_>; 7] = [
+        ReplaceChar { from: "<", to: "" },
+        ReplaceChar { from: ">", to: "" },
+        ReplaceChar {
+            from: ":",
+            to: " - ",
+        },
+        ReplaceChar {
+            from: "\"",
+            to: "\'",
+        },
+        ReplaceChar { from: "|", to: "" },
+        ReplaceChar { from: "?", to: "" },
+        ReplaceChar { from: "*", to: "" },
+    ];
+
+    for replacement in ILLEGAL_CHARS {
+        name = name.replace(replacement.from, replacement.to);
+    }
+
+    name
+}
+
+/// Downloads a file or folder
+///
+/// # Arguments
+///
+/// * `client` - The reqwest client
+/// * `api_token` - The user's API token
+/// * `file_id` - The ID of the file or folder to download
+/// * `recursive` - Recursively download the folder
+/// * `path` - The path to save the file or folder to
+/// * `no_replace` - Do not replace illegal characters in the file name
 pub fn download(
     client: &Client,
     api_token: &String,
     file_id: i64,
     recursive: bool,
     path: Option<&String>,
+    no_replace: bool,
 ) -> Result<(), Error> {
     let files: FilesResponse =
         put::files::list(client, api_token, file_id).expect("querying files");
@@ -194,16 +236,27 @@ pub fn download(
             match recursive {
                 true => {
                     // Recursively download the folder
-                    let directory_path: String = match path {
+                    let mut directory_path: String = match path {
                         Some(p) => format!("{}/{}", p, files.parent.name), // Use the provided path if there is one
                         None => format!("./{}", files.parent.name),
                     };
 
+                    if !no_replace {
+                        directory_path = replace_illegal_chars(&directory_path);
+                    }
+
                     fs::create_dir_all(directory_path.clone()).expect("creating directory");
 
                     for file in files.files {
-                        download(client, api_token, file.id, true, Some(&directory_path))
-                            .expect("downloading file recursively");
+                        download(
+                            client,
+                            api_token,
+                            file.id,
+                            true,
+                            Some(&directory_path),
+                            no_replace,
+                        )
+                        .expect("downloading file recursively");
                     }
                 }
                 false => {
@@ -215,10 +268,14 @@ pub fn download(
 
                     println!("ZIP created!");
 
-                    let output_path: String = match path {
+                    let mut output_path: String = match path {
                         Some(p) => format!("{}/{}.zip", p, files.parent.name),
                         None => format!("./{}.zip", files.parent.name),
                     };
+
+                    if !no_replace {
+                        output_path = replace_illegal_chars(&output_path);
+                    }
 
                     println!("Downloading: {}", files.parent.name);
                     println!("Saving to: {}\n", output_path);
@@ -245,10 +302,14 @@ pub fn download(
             let url_response: UrlResponse =
                 put::files::url(client, api_token, file_id).expect("creating download URL");
 
-            let output_path: String = match path {
+            let mut output_path: String = match path {
                 Some(p) => format!("{}/{}", p, files.parent.name),
                 None => format!("./{}", files.parent.name),
             };
+
+            if !no_replace {
+                output_path = replace_illegal_chars(&output_path);
+            }
 
             println!("Downloading: {}", files.parent.name);
             println!("Saving to: {}\n", output_path);
