@@ -1,6 +1,6 @@
 [package]
 name = "kaput-cli"
-version = "2.4.2"
+version = "2.5.0"
 edition = "2021"
 authors = ["David Chalifoux <mail@chalifoux.dev>"]
 license = "MIT"
