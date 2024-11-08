@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::process::{Command as ProcessCommand, Stdio};
 use std::{fmt, fs};
 
@@ -332,4 +333,32 @@ pub fn download(
     }
 
     Ok(())
+}
+
+pub fn upload(
+    api_token: &String,
+    path: &PathBuf,
+    parent_id: Option<&String>,
+    curl_args: &Vec<String>,
+) {
+    println!("Uploading: {}\n", path.to_string_lossy());
+
+    ProcessCommand::new("curl")
+        .args(curl_args.clone())
+        .arg("-H")
+        .arg(format!("Authorization: Bearer {}", api_token))
+        .arg("-F")
+        .arg(format!("file=@{}", path.to_string_lossy()))
+        .arg("-F")
+        .arg(format!(
+            "parent_id={}",
+            parent_id.unwrap_or(&"0".to_string())
+        ))
+        .arg("https://upload.put.io/v2/files/upload")
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("failed to run CURL command")
+        .wait_with_output()
+        .expect("failed to run CURL command");
+    println!("\nUpload finished!")
 }
