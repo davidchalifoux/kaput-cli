@@ -158,21 +158,13 @@ fn cli() -> Command {
                 .subcommand(
                     Command::new("upload")
                         .about("Upload file(s) to your account")
-                        .long_about("Uploads file(s) to your account.")
+                        .long_about("Uploads file(s) to your account. It will automatically switch to the resumable upload protocol if the file size is greater than or equal to 50 MB.")
                         .arg_required_else_help(true)
                         .arg(
                             Arg::new("parent_id")
                                 .short('p')
                                 .long("parent")
-                                .value_parser(value_parser!(i64))
                                 .help("ID of a Put folder to upload to instead of the root folder")
-                                .required(false)
-                        )
-                        .arg(
-                            Arg::new("file_name")
-                                .short('n')
-                                .long("name")
-                                .help("Override file name")
                                 .required(false)
                         )
                         .arg(
@@ -556,11 +548,13 @@ fn main() {
             Some(("upload", sub_matches)) => {
                 require_auth(&client, &config);
 
-                let parent_id = sub_matches.get_one::<String>("parent_id");
+                let path = sub_matches
+                    .get_one::<PathBuf>("PATH")
+                    .expect("missing path");
 
-                let file_name = sub_matches.get_one::<String>("file_name");
+                let parent_id: Option<&String> = sub_matches.get_one::<String>("parent_id");
 
-                let is_silent = sub_matches.get_one::<bool>("is_silent");
+                let is_silent: Option<&bool> = sub_matches.get_one::<bool>("is_silent");
 
                 let mut curl_args: Vec<String> = vec![];
 
@@ -569,35 +563,19 @@ fn main() {
                     curl_args.push("-s".to_string());
                 }
 
-                let paths = sub_matches
-                    .get_many::<PathBuf>("PATH")
-                    .into_iter()
-                    .flatten()
-                    .collect::<Vec<_>>();
+                let metadata: std::fs::Metadata =
+                    std::fs::metadata(path).expect("reading file metadata");
 
-                for path in paths {
-                    println!("Uploading: {}\n", path.to_string_lossy());
+                let file_size: u64 = metadata.len();
 
-                    ProcessCommand::new("curl")
-                        .args(curl_args.clone())
-                        .arg("-H")
-                        .arg(format!("Authorization: Bearer {}", config.api_token))
-                        .arg("-F")
-                        .arg(format!("file=@{}", path.to_string_lossy()))
-                        .arg("-F")
-                        .arg(format!("filename={}", file_name.unwrap_or(&"".to_string())))
-                        .arg("-F")
-                        .arg(format!(
-                            "parent_id={}",
-                            parent_id.unwrap_or(&"0".to_string())
-                        ))
-                        .arg("https://upload.put.io/v2/files/upload")
-                        .stdout(Stdio::piped())
-                        .spawn()
-                        .expect("failed to run CURL command")
-                        .wait_with_output()
-                        .expect("failed to run CURL command");
-                    println!("\nUpload finished!")
+                if file_size >= 52_428_800 {
+                    println!("Mode: Resumable");
+
+                    put::tus::upload(&client, &config.api_token, path, parent_id);
+                } else {
+                    println!("Mode: Non-resumable");
+
+                    put::files::upload(&config.api_token, path, parent_id, &curl_args);
                 }
             }
             Some(("move", sub_matches)) => {
