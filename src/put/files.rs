@@ -335,16 +335,11 @@ pub fn download(
     Ok(())
 }
 
-pub fn upload(
-    api_token: &String,
-    path: &Path,
-    parent_id: Option<&String>,
-    curl_args: &Vec<String>,
-) {
+pub fn upload(api_token: &String, path: &Path, parent_id: Option<&String>, curl_args: &[String]) {
     println!("Uploading: {}\n", path.to_string_lossy());
 
     ProcessCommand::new("curl")
-        .args(curl_args.clone())
+        .args(curl_args)
         .arg("-H")
         .arg(format!("Authorization: Bearer {}", api_token))
         .arg("-F")
