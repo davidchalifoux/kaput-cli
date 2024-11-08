@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.5.0](https://github.com/davidchalifoux/kaput-cli/compare/v2.4.2...v2.5.0) (2024-11-08)
+
+
+### Features
+
+* Resumable uploads ([448bcec](https://github.com/davidchalifoux/kaput-cli/commit/448bcece61b3115e34072df03421854c87691b70))
+* Support for large file uploads (refs [#57](https://github.com/davidchalifoux/kaput-cli/issues/57)) ([68dcde7](https://github.com/davidchalifoux/kaput-cli/commit/68dcde71223d0ffddce28ba095a79c41504195a1))
+
+
+### Bug Fixes
+
+* Update release-please ([fd3d469](https://github.com/davidchalifoux/kaput-cli/commit/fd3d469deb41625fc49f34d907c1158fe2e28cb1))
+
 ## [2.4.2](https://github.com/davidchalifoux/kaput-cli/compare/v2.4.1...v2.4.2) (2024-07-26)
 
 
