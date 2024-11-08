@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::Path;
 use std::process::{Command as ProcessCommand, Stdio};
 use std::{fmt, fs};
 
@@ -337,7 +337,7 @@ pub fn download(
 
 pub fn upload(
     api_token: &String,
-    path: &PathBuf,
+    path: &Path,
     parent_id: Option<&String>,
     curl_args: &Vec<String>,
 ) {

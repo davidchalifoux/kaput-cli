@@ -22,7 +22,7 @@ pub fn upload(client: &Client, api_token: &String, path: &PathBuf, parent_id: Op
         .to_string_lossy()
         .to_string();
 
-    let metadata: std::fs::Metadata = std::fs::metadata(&path).expect("reading file metadata");
+    let metadata: std::fs::Metadata = std::fs::metadata(path).expect("reading file metadata");
 
     let file_size: u64 = metadata.len();
     let last_modified: std::time::SystemTime = metadata.modified().expect("reading last modified");
@@ -33,7 +33,7 @@ pub fn upload(client: &Client, api_token: &String, path: &PathBuf, parent_id: Op
 
     println!("Uploading: {}", file_name);
 
-    let file: std::fs::File = std::fs::File::open(&path).expect("opening file");
+    let file: std::fs::File = std::fs::File::open(path).expect("opening file");
 
     let location: String;
 
@@ -87,7 +87,7 @@ pub fn upload(client: &Client, api_token: &String, path: &PathBuf, parent_id: Op
         total_bytes_read += bytes_read as u64;
 
         // Skip to the initial offset, then start uploading the file from the containing chunk
-        if total_bytes_read < resume_offset as u64 {
+        if total_bytes_read < resume_offset {
             continue;
         }
 
@@ -133,8 +133,6 @@ pub fn upload(client: &Client, api_token: &String, path: &PathBuf, parent_id: Op
         let percentage_completed: f64 = (total_bytes_read as f64 / file_size as f64) * 100.0;
         println!("{:.0}% ({:.2} MB/s)", percentage_completed, upload_speed);
     }
-
-    return;
 }
 
 fn get_offset(client: &Client, api_token: &String, location: String) -> u64 {
@@ -156,7 +154,7 @@ fn get_offset(client: &Client, api_token: &String, location: String) -> u64 {
         }
     }
 
-    return 0;
+    0
 }
 
 /// Creates a new upload using TUS, returns the location
@@ -193,5 +191,5 @@ fn create_upload(
         }
     }
 
-    return None;
+    None
 }

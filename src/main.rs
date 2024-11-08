@@ -564,7 +564,7 @@ fn main() {
                 }
 
                 let metadata: std::fs::Metadata =
-                    std::fs::metadata(&path).expect("reading file metadata");
+                    std::fs::metadata(path).expect("reading file metadata");
 
                 let file_size: u64 = metadata.len();
 
