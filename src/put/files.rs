@@ -12,7 +12,7 @@ use tabled::Tabled;
 use crate::put;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct FileSize(u64);
+pub struct FileSize(pub u64);
 
 impl fmt::Display for FileSize {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -28,6 +28,9 @@ pub struct File {
     pub file_type: String,
     pub size: FileSize,
     pub created_at: String,
+    #[serde(default)]
+    #[tabled(skip)]
+    pub updated_at: String,
     #[serde_as(as = "DefaultOnNull")]
     pub parent_id: i64,
 }
@@ -38,17 +41,98 @@ pub struct FilesResponse {
     pub parent: File,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct FilesListPageResponse {
+    pub files: Vec<File>,
+    pub parent: File,
+    pub cursor: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct FilesContinueResponse {
+    pub files: Vec<File>,
+    pub cursor: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct FilesContinueRequest {
+    pub cursor: String,
+    pub per_page: i64,
+}
+
+/// Resolves a slash-separated path (e.g. "Movies/Action/film.mkv") to a file ID
+/// by walking the Put.io folder tree from the root. Matching is case-insensitive.
+/// Returns an error string if any component is not found.
+pub fn resolve_path(client: &Client, api_token: &String, path: &str) -> Result<i64, String> {
+    let parts: Vec<&str> = path
+        .trim_matches('/')
+        .split('/')
+        .filter(|s| !s.is_empty())
+        .collect();
+
+    let mut current_id: i64 = 0;
+
+    for (i, part) in parts.iter().enumerate() {
+        let lower_part = part.to_lowercase();
+
+        let response = list(client, api_token, current_id).map_err(|e| e.to_string())?;
+
+        let found = response
+            .files
+            .iter()
+            .find(|f| f.name.to_lowercase() == lower_part);
+
+        match found {
+            Some(file) => {
+                if i < parts.len() - 1 && file.file_type != "FOLDER" {
+                    return Err(format!("'{}' is not a folder", part));
+                }
+                current_id = file.id;
+            }
+            None => return Err(format!("'{}' not found", part)),
+        }
+    }
+
+    Ok(current_id)
+}
+
 /// Returns the user's files.
 pub fn list(client: &Client, api_token: &String, parent_id: i64) -> Result<FilesResponse, Error> {
-    let response: FilesResponse = client
-        .get(format!(
-            "https://api.put.io/v2/files/list?parent_id={parent_id}"
-        ))
+    const LIST_PAGE_SIZE: i64 = 1000;
+
+    let response: FilesListPageResponse = client
+        .get("https://api.put.io/v2/files/list")
+        .query(&[("parent_id", parent_id), ("per_page", LIST_PAGE_SIZE)])
         .header("authorization", format!("Bearer {api_token}"))
         .send()?
         .json()?;
 
-    Ok(response)
+    let parent = response.parent;
+    let mut files = response.files;
+    let mut cursor = response.cursor;
+
+    while let Some(next_cursor) = cursor {
+        if next_cursor.is_empty() {
+            break;
+        }
+
+        let request = FilesContinueRequest {
+            cursor: next_cursor,
+            per_page: LIST_PAGE_SIZE,
+        };
+
+        let page: FilesContinueResponse = client
+            .post("https://api.put.io/v2/files/list/continue")
+            .form(&request)
+            .header("authorization", format!("Bearer {api_token}"))
+            .send()?
+            .json()?;
+
+        files.extend(page.files);
+        cursor = page.cursor;
+    }
+
+    Ok(FilesResponse { files, parent })
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -262,7 +346,7 @@ pub fn download(
                 }
                 false => {
                     // Create a ZIP
-                    println!("Creating ZIP...");
+                    println!("Creating ZIP for \"{}\"...", files.parent.name);
 
                     let zip_url: String = put::zips::create(client, api_token, files.parent.id)
                         .expect("creating zip job");

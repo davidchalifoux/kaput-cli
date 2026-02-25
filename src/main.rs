@@ -6,6 +6,7 @@ use std::process::{Command as ProcessCommand, Stdio};
 use std::{thread, time};
 use tabled::{settings::Style, Table};
 
+mod browse;
 mod put;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -115,10 +116,9 @@ fn cli() -> Command {
                         .long_about("Downloads a file or folder from your account to your device.")
                         .arg_required_else_help(true)
                         .arg(
-                            Arg::new("FILE_ID")
-                            .value_parser(value_parser!(i64))
+                            Arg::new("TARGET")
+                            .help("File ID or path on Put.io (e.g. 12345 or Movies/film.mkv)")
                             .required(true)
-                            .help("ID(s) of a file or folder (required)")
                         )
                         .arg(
                             Arg::new("path")
@@ -323,6 +323,10 @@ fn cli() -> Command {
                 )
         )
         .subcommand(
+            Command::new("browse")
+                .about("Browse your files interactively")
+        )
+        .subcommand(
             Command::new("whoami")
                 .about("Check what account you are logged into")
                 .long_about(
@@ -519,17 +523,22 @@ fn main() {
 
                 let recursive = sub_matches.get_flag("recursive");
                 let no_replace = sub_matches.get_flag("no-replace");
-                let path = sub_matches.get_one::<String>("path");
-                let file_id = sub_matches
-                    .get_one("FILE_ID")
-                    .expect("missing file_id argument");
+                let dest_path = sub_matches.get_one::<String>("path");
+                let target = sub_matches
+                    .get_one::<String>("TARGET")
+                    .expect("missing target");
+                let file_id = match target.parse::<i64>() {
+                    Ok(id) => id,
+                    Err(_) => put::files::resolve_path(&client, &config.api_token, target)
+                        .unwrap_or_else(|e| panic!("Could not find '{}': {}", target, e)),
+                };
 
                 put::files::download(
                     &client,
                     &config.api_token,
-                    *file_id,
+                    file_id,
                     recursive,
-                    path,
+                    dest_path,
                     no_replace,
                 )
                 .expect("downloading file(s)");
@@ -713,6 +722,10 @@ fn main() {
             }
         },
 
+        Some(("browse", _)) => {
+            require_auth(&client, &config);
+            browse::run(&client, &config.api_token).expect("error running file browser");
+        }
         _ => {
             println!("Invalid command. Try using the `--help` flag.")
         }
