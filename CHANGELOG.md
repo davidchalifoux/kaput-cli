@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/davidchalifoux/kaput-cli/compare/v2.5.0...v2.6.0) (2026-02-25)
+
+
+### Features
+
+* Interactive browser TUI ([#68](https://github.com/davidchalifoux/kaput-cli/issues/68)) ([cff7564](https://github.com/davidchalifoux/kaput-cli/commit/cff75640c4bc2305fd4dbf63b614a5fe9ad95310))
+
 ## [2.5.0](https://github.com/davidchalifoux/kaput-cli/compare/v2.4.2...v2.5.0) (2024-11-08)
 
 
