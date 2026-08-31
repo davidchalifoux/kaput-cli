@@ -144,6 +144,44 @@ fn cli() -> Command {
                         )
                 )
                 .subcommand(
+                    Command::new("urllist")
+                        .about("Create a URL list of a file or folder")
+                        .long_about("Create a URL list of a file or folder for downloading using aria2.")
+                        .arg_required_else_help(true)
+                        .arg(
+                            Arg::new("URLLIST")
+                            .help("Path to URL list to be created")
+                            .required(true)
+                        )
+                        .arg(
+                            Arg::new("TARGET")
+                            .help("File ID or path on Put.io (e.g. 12345 or Movies/film.mkv)")
+                            .required(true)
+                        )
+                        .arg(
+                            Arg::new("path")
+                            .short('p')
+                            .long("path")
+                            .help("Path to download the file(s) to")
+                            .required(false).num_args(1)
+                        )
+                        .arg(
+                            Arg::new("recursive")
+                            .short('r')
+                            .long("recursive")
+                            .help("Download the contents of a folder recursively without creating a zip")
+                            .required(false)
+                            .num_args(0)
+                        )
+                        .arg(
+                            Arg::new("no-replace")
+                            .long("no-replace")
+                            .help("Disable character replacement of files with illegal characters")
+                            .required(false)
+                            .num_args(0)
+                        )
+                )
+                .subcommand(
                     Command::new("delete")
                         .about("Delete file(s)")
                         .long_about("Deletes the specified file(s) on your account.")
@@ -517,6 +555,35 @@ fn main() {
 
                 println!("\n# Results for `{}`\n", &query);
                 println!("{}\n", table);
+            }
+            Some(("urllist", sub_matches)) => {
+                require_auth(&client, &config);
+
+                let recursive = sub_matches.get_flag("recursive");
+                let no_replace = sub_matches.get_flag("no-replace");
+                let dest_path = sub_matches.get_one::<String>("path");
+                let url_list = sub_matches
+                    .get_one::<String>("URLLIST")
+                    .expect("missing urllist");
+                let target = sub_matches
+                    .get_one::<String>("TARGET")
+                    .expect("missing target");
+                let file_id = match target.parse::<i64>() {
+                    Ok(id) => id,
+                    Err(_) => put::files::resolve_path(&client, &config.api_token, target)
+                        .unwrap_or_else(|e| panic!("Could not find '{}': {}", target, e)),
+                };
+
+                put::files::urllist(
+                    &client,
+                    &config.api_token,
+                    file_id,
+                    url_list,
+                    recursive,
+                    dest_path,
+                    no_replace
+                )
+                .expect("generating url list");
             }
             Some(("download", sub_matches)) => {
                 require_auth(&client, &config);
