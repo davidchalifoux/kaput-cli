@@ -326,7 +326,7 @@ fn recurse_folder(
                     file.id,
                     Some(&directory_path),
                     no_replace
-                )?;
+                )?
             }
         },
         _ => {
@@ -341,9 +341,10 @@ fn recurse_folder(
             match parent {
                 Some(p) => write!(url_fd, "{}\n dir={}\n out={}\n", url_response.url, p, filename),
                 None => write!(url_fd, "{}\n out={}\n", url_response.url, filename),
-            };
+            }
+            .expect("cannot write url list");
         },
-    };
+    }
 
     Ok(())
 }
@@ -405,9 +406,10 @@ pub fn urllist(
                     let mut url_fd: FSFile = FSFile::create(url_list).expect("Cannot create URL list");
 
                     match path {
-                        Some(p) => write!(url_fd, "{}\n dir={}\n out={}.zip\n", zip_url, p, files.parent.name),
-                        None => write!(url_fd, "{}\n out={}.zip\n", zip_url, files.parent.name),
-                    };
+                        Some(p) => write!(url_fd, "{}\n dir={}\n out={}.zip\n", zip_url, p, filename),
+                        None => write!(url_fd, "{}\n out={}.zip\n", zip_url, filename),
+                    }
+                    .expect("cannot write url list");
 
                     println!("URL list created!");
                 }
