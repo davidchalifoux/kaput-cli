@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.7.0](https://github.com/davidchalifoux/kaput-cli/compare/v2.6.0...v2.7.0) (2026-09-01)
+
+
+### Features
+
+* export-aria2 and URL list file generation ([#70](https://github.com/davidchalifoux/kaput-cli/issues/70)) ([b9e6cb4](https://github.com/davidchalifoux/kaput-cli/commit/b9e6cb4b0e9de7ec11bf181fdcaf0aeb58dc82e2))
+
+
+### Bug Fixes
+
+* update release-please action ([#71](https://github.com/davidchalifoux/kaput-cli/issues/71)) ([3f1b238](https://github.com/davidchalifoux/kaput-cli/commit/3f1b2389369f8c6b7c0b38a0bb4c07f36ebbda49))
+
 ## [2.6.0](https://github.com/davidchalifoux/kaput-cli/compare/v2.5.0...v2.6.0) (2026-02-25)
 
 
