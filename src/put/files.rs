@@ -1,3 +1,5 @@
+use std::fs::File as FSFile;
+use std::io::Write;
 use std::path::Path;
 use std::process::{Command as ProcessCommand, Stdio};
 use std::{fmt, fs};
@@ -292,6 +294,139 @@ fn replace_illegal_chars(name: &str) -> String {
     }
 
     name
+}
+
+fn recurse_folder(
+    url_fd: &mut FSFile,
+    client: &Client,
+    api_token: &String,
+    file_id: i64,
+    parent: Option<&String>,
+    no_replace: bool,
+) -> Result<(), Error> {
+    let files: FilesResponse =
+        put::files::list(client, api_token, file_id).expect("querying files");
+
+    match files.parent.file_type.as_str() {
+        "FOLDER" => {
+            let directory_name = match no_replace {
+                true => files.parent.name,
+                false => replace_illegal_chars(&files.parent.name),
+            };
+            let directory_path = match parent {
+                Some(p) => format!("{}/{}", p, directory_name),
+                None => directory_name,
+            };
+
+            for file in files.files {
+                recurse_folder(
+                    url_fd,
+                    client,
+                    api_token,
+                    file.id,
+                    Some(&directory_path),
+                    no_replace,
+                )?
+            }
+        }
+        _ => {
+            let url_response: UrlResponse =
+                put::files::url(client, api_token, file_id).expect("generating url");
+
+            let filename: String = match no_replace {
+                true => files.parent.name,
+                false => replace_illegal_chars(&files.parent.name),
+            };
+
+            match parent {
+                Some(p) => write!(
+                    url_fd,
+                    "{}\n dir={}\n out={}\n",
+                    url_response.url, p, filename
+                ),
+                None => write!(url_fd, "{}\n out={}\n", url_response.url, filename),
+            }
+            .expect("cannot write url list");
+        }
+    }
+
+    Ok(())
+}
+
+/// Generate URL list for aria2c
+///
+/// # Arguments
+///
+/// * `client` - The reqwest client
+/// * `api_token` - The user's API token
+/// * `file_id` - The ID of the file or folder to download
+/// * `recursive` - Recursively download the folder
+/// * `path` - The path to save the file or folder to
+/// * `no_replace` - Do not replace illegal characters in the file name
+pub fn export_aria2(
+    client: &Client,
+    api_token: &String,
+    file_id: i64,
+    url_list: &String,
+    recursive: bool,
+    path: Option<&String>,
+    no_replace: bool,
+) -> Result<(), Error> {
+    let files: FilesResponse =
+        put::files::list(client, api_token, file_id).expect("querying files");
+
+    match files.parent.file_type.as_str() {
+        "FOLDER" => {
+            // ID is for a folder
+            match recursive {
+                true => {
+                    // Recursively download the folder
+                    let mut url_fd: FSFile =
+                        FSFile::create(url_list).expect("Cannot create URL list");
+                    recurse_folder(&mut url_fd, client, api_token, file_id, path, no_replace)
+                        .expect("Failed to write URL to list");
+
+                    println!("URL list created!");
+                }
+                false => {
+                    // Create a ZIP
+                    println!("Creating ZIP for \"{}\"...", files.parent.name);
+
+                    let zip_url: String = put::zips::create(client, api_token, files.parent.id)
+                        .expect("creating zip job");
+
+                    println!("ZIP created!");
+
+                    let filename: String = match no_replace {
+                        true => files.parent.name,
+                        false => replace_illegal_chars(&files.parent.name),
+                    };
+
+                    let mut url_fd: FSFile =
+                        FSFile::create(url_list).expect("Cannot create URL list");
+
+                    match path {
+                        Some(p) => {
+                            write!(url_fd, "{}\n dir={}\n out={}.zip\n", zip_url, p, filename)
+                        }
+                        None => write!(url_fd, "{}\n out={}.zip\n", zip_url, filename),
+                    }
+                    .expect("cannot write url list");
+
+                    println!("URL list created!");
+                }
+            }
+        }
+        _ => {
+            let mut url_fd: FSFile = FSFile::create(url_list).expect("Cannot create URL list");
+            recurse_folder(&mut url_fd, client, api_token, file_id, path, no_replace)
+                .expect("Failed to write URL to list");
+
+            println!("URL list created!");
+        }
+    }
+
+    Ok(())
 }
 
 /// Downloads a file or folder
