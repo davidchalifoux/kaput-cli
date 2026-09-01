@@ -144,18 +144,18 @@ fn cli() -> Command {
                         )
                 )
                 .subcommand(
-                    Command::new("urllist")
-                        .about("Create a URL list of a file or folder")
-                        .long_about("Create a URL list of a file or folder for downloading using aria2.")
+                    Command::new("export-aria2")
+                        .about("Export a Put.io file or folder as an aria2 input file")
+                        .long_about("Writes an aria2-compatible input file containing download URLs and output paths for a Put.io file or folder. Use the generated file with `aria2c --input-file <OUTPUT_FILE>`.")
                         .arg_required_else_help(true)
                         .arg(
-                            Arg::new("URLLIST")
-                            .help("Path to URL list to be created")
+                            Arg::new("PUTIO_TARGET")
+                            .help("Put.io file or folder ID, or remote path (e.g. 12345 or Movies/film.mkv)")
                             .required(true)
                         )
                         .arg(
-                            Arg::new("TARGET")
-                            .help("File ID or path on Put.io (e.g. 12345 or Movies/film.mkv)")
+                            Arg::new("OUTPUT_FILE")
+                            .help("Local path where the aria2 input file will be written")
                             .required(true)
                         )
                         .arg(
@@ -556,32 +556,32 @@ fn main() {
                 println!("\n# Results for `{}`\n", &query);
                 println!("{}\n", table);
             }
-            Some(("urllist", sub_matches)) => {
+            Some(("export-aria2", sub_matches)) => {
                 require_auth(&client, &config);
 
                 let recursive = sub_matches.get_flag("recursive");
                 let no_replace = sub_matches.get_flag("no-replace");
                 let dest_path = sub_matches.get_one::<String>("path");
-                let url_list = sub_matches
-                    .get_one::<String>("URLLIST")
-                    .expect("missing urllist");
-                let target = sub_matches
-                    .get_one::<String>("TARGET")
-                    .expect("missing target");
-                let file_id = match target.parse::<i64>() {
+                let output_file = sub_matches
+                    .get_one::<String>("OUTPUT_FILE")
+                    .expect("missing output file path");
+                let putio_target = sub_matches
+                    .get_one::<String>("PUTIO_TARGET")
+                    .expect("missing Put.io target");
+                let file_id = match putio_target.parse::<i64>() {
                     Ok(id) => id,
-                    Err(_) => put::files::resolve_path(&client, &config.api_token, target)
-                        .unwrap_or_else(|e| panic!("Could not find '{}': {}", target, e)),
+                    Err(_) => put::files::resolve_path(&client, &config.api_token, putio_target)
+                        .unwrap_or_else(|e| panic!("Could not find '{}': {}", putio_target, e)),
                 };
 
-                put::files::urllist(
+                put::files::export_aria2(
                     &client,
                     &config.api_token,
                     file_id,
-                    url_list,
+                    output_file,
                     recursive,
                     dest_path,
-                    no_replace
+                    no_replace,
                 )
                 .expect("generating url list");
             }
